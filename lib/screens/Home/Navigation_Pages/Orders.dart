@@ -9,6 +9,7 @@ import 'package:van_lines/screens/Home/Navigation_Pages/Make%20an%20order/Servic
 import 'package:van_lines/screens/Home/Navigation_Pages/Orders_map/Qr_Scanner.dart';
 import 'package:van_lines/screens/Home/Navigation_Pages/Orders_map/Rating.dart';
 import 'package:van_lines/screens/Home/Navigation_Pages/Orders_map/Track_orders.dart';
+import 'package:van_lines/screens/Home/Navigation_drawer.dart';
 import 'package:van_lines/screens/home/Navigation_drawer.dart';
 import 'dart:developer';
 import '../../../models/User.dart';
@@ -67,7 +68,7 @@ Future gethistory() async{
   Widget build(BuildContext context) {
     return Scaffold(
       // extendBodyBehindAppBar: true,
-      drawer: NavigationDrawer(),
+      drawer: NavigationDrawerModel(),
       appBar: AppBar(
         elevation: 0,
         title: Text('My Orders'.tr),

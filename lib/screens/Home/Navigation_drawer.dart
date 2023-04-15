@@ -30,14 +30,14 @@ import 'package:van_lines/models/localstring.dart';
 import '../../services/Storage.dart';
 
 
-class NavigationDrawer extends StatefulWidget {
-  const NavigationDrawer({Key? key}) : super(key: key);
+class NavigationDrawerModel extends StatefulWidget {
+  const NavigationDrawerModel({Key? key}) : super(key: key);
 
   @override
-  State<NavigationDrawer> createState() => _NavigationDrawerState();
+  State<NavigationDrawerModel> createState() => _NavigationDrawerModelState();
 }
 
-class _NavigationDrawerState extends State<NavigationDrawer> {
+class _NavigationDrawerModelState extends State<NavigationDrawerModel> {
   final StreamController<bool> _verificationNotifier = StreamController<
       bool>.broadcast();
   bool isAuthenticated = false;

@@ -68,7 +68,7 @@ class _HomeState extends State<Home> {
           }, icon: Icon(Icons.notifications_active))
         ],
        ),
-      drawer: PhysicalModel(child: const NavigationDrawer(),
+      drawer: const PhysicalModel(child: NavigationDrawerModel(),
       color: Colors.green,
       shadowColor: Colors.green,
       elevation: 20.0,),

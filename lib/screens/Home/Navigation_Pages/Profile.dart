@@ -67,7 +67,7 @@ class _ProfileState extends State<Profile> {
 
 
     return Scaffold(
-      drawer: NavigationDrawer(),
+      drawer: NavigationDrawerModel(),
       extendBodyBehindAppBar: true,
       appBar: AppBar(
         title: Text('Profile'.tr),

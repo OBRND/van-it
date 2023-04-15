@@ -8,7 +8,7 @@ class settings extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: NavigationDrawer(),
+      drawer: NavigationDrawerModel(),
       appBar: AppBar(
         title: Text('Settings'.tr),
         backgroundColor: Colors.blue,

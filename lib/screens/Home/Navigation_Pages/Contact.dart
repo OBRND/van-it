@@ -36,7 +36,7 @@ class _Contact_usState extends State<Contact_us> {
 
     return Scaffold(
       backgroundColor: Colors.blueGrey,
-      drawer: NavigationDrawer(),
+      drawer: NavigationDrawerModel(),
       appBar: AppBar(
         elevation: 0,
         title: Text('Contact Us'.tr),

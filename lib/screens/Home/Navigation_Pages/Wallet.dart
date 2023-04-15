@@ -51,7 +51,7 @@ class _WalletState extends State<Wallet> {
        if(snapshot.hasData) {
          return Scaffold(
           extendBodyBehindAppBar: true,
-          drawer: NavigationDrawer(),
+          drawer: NavigationDrawerModel(),
           appBar: AppBar(
             title: Text(''),
             backgroundColor: Colors.transparent,

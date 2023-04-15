@@ -9,7 +9,7 @@ class About_us extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
         home: Scaffold(
-            drawer: NavigationDrawer(),
+            drawer: NavigationDrawerModel(),
             appBar: AppBar(
               title: Text('About us'.tr),
               backgroundColor: Colors.black12,
