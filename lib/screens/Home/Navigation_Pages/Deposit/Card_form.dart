@@ -5,6 +5,7 @@ import 'package:van_lines/screens/Home/Navigation_Pages/Wallet.dart';
 
 import '../../../../models/User.dart';
 import '../../../../services/Database.dart';
+import 'package:get/get.dart';
 
 class Card_form extends StatefulWidget {
   String fullname;
@@ -33,7 +34,7 @@ class _Card_formState extends State<Card_form> {
       // extendBodyBehindAppBar: true,
       appBar: AppBar(
           elevation: 0,
-          title: Text('Choose a payment method',style: TextStyle(color: Colors.white),),
+          title: Text('Choose a payment method'.tr,style: TextStyle(color: Colors.white),),
           backgroundColor: Colors.indigo,
           leading: new IconButton(
             icon: new Icon(Icons.arrow_back, color: Colors.black),
@@ -42,7 +43,7 @@ class _Card_formState extends State<Card_form> {
       body: Stack(
           children:[
             Container(
-                height: 115,
+                height: 100,
                 decoration:BoxDecoration(
                   color: Colors.indigo,
                   borderRadius: BorderRadius.only(
@@ -62,8 +63,8 @@ class _Card_formState extends State<Card_form> {
         children: [
           Padding(
             padding: const EdgeInsets.fromLTRB(35,15,25,20),
-            child: Text('Through which bank and their service do you like to complete the payment.',
-                style: TextStyle(color: Colors.white,fontSize: 20,fontWeight: FontWeight.bold)),
+            child: Text('Through which bank and their service do you like to complete the payment.'.tr,
+                style: TextStyle(color: Colors.white,fontSize: 18,fontWeight: FontWeight.w400)),
           ),
           SizedBox(height:40),
           GridView.count(
@@ -129,14 +130,14 @@ class _Card_formState extends State<Card_form> {
       Navigator.of(context).pushReplacement(MaterialPageRoute(
           builder: (context) => Wallet()));
     },
-      child: Text("Finish"),
+      child: Text("Finish".tr),
       // backgroundColor: Colors.black,
     );    // set up the AlertDialog
     AlertDialog alert = AlertDialog(
       scrollable: true,
       backgroundColor: Colors.white70,
       title: Text("**Follow all the instructions below."
-          " We are not responsible for any inconviniences if the instructions are incorrectly followed**",
+          " We are not responsible for any inconviniences if the instructions are incorrectly followed**".tr,
           style:TextStyle(
             color: Colors.red,
             fontWeight: FontWeight.bold,
@@ -148,7 +149,7 @@ class _Card_formState extends State<Card_form> {
           children: <TextSpan>[
             TextSpan(
               text: "1) Choose any method Namely Manual/branch, Mobile banking or CBE birr to deposit/transfer.\n"
-                  "2) Deposit/transfer",
+                  "2) Deposit/transfer".tr,
               style: TextStyle(color: Colors.black, fontSize: 14),
             ),
             TextSpan(
@@ -157,7 +158,7 @@ class _Card_formState extends State<Card_form> {
               style: TextStyle(color: Colors.red, fontSize: 14),
             ),
             TextSpan(
-              text: " to account ",
+              text: " to account ".tr,
             ),
             TextSpan(
               text: " 1000552626265.\n",
@@ -166,7 +167,7 @@ class _Card_formState extends State<Card_form> {
             TextSpan(
                 text: "3) On the deposit form use the code below as a **Reason** this is very important.\n"
                     "4) Your Account will be updated to the deposited amount within the next 12 hours.\n"
-                    "5) The code is"),
+                    "5) The code is".tr),
             TextSpan(
               text: " $Code ",
               style: TextStyle(color: Colors.red, fontSize: 18),
@@ -175,7 +176,7 @@ class _Card_formState extends State<Card_form> {
               text: " use this as Reason.\n ",
             ),
             TextSpan(
-                text: " Beware of Capitalization of the code. ",
+                text: " Beware of Capitalization of the code. ".tr,
                 style: TextStyle(color: Colors.red)
             ),
           ],

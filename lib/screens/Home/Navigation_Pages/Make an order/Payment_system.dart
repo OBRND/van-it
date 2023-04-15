@@ -50,7 +50,7 @@ class _Payment_systemState extends State<Payment_system> {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         title: Text('Finish up with your payment',
-          style: TextStyle(color: Colors.white),),
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.w300),),
         elevation: 0,
       ),
       body: SingleChildScrollView(
@@ -76,18 +76,54 @@ class _Payment_systemState extends State<Payment_system> {
                         expandedCrossAxisAlignment: CrossAxisAlignment.start,
                         backgroundColor: Colors.transparent,
                         collapsedBackgroundColor: Colors.transparent,
-                        title: Text('   Price: ${widget.pay[0]}',
-                          style: TextStyle(color: Colors.white, fontSize: 25),),
+                        title: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            SizedBox(width: 10,),
+                            Row(
+                              children: [
+                                Text('Price:',
+                                  style: TextStyle(color: Colors.grey, fontSize: 20, fontWeight: FontWeight.w300),),
+                              Text(' ${widget.pay[0]} Br',
+                                  style: TextStyle(color: Colors.white, fontSize: 25, ),),
+                              ],
+                            ),
+                          ],
+                        ),
                         children: [
-                          Text("Transport Cost: ${widget.pay[1]} ",
-                              style: TextStyle(color: Colors.white,
-                                  fontSize: 18)),
-                          Text('Packaging Cost: ${widget.pay[3]}',
-                              style: TextStyle(color: Colors.white,
-                                  fontSize: 18)),
-                          Text("Service charge with tax: ${widget.pay[2]}",
-                              style: TextStyle(color: Colors.white,
-                                  fontSize: 18)),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text("Transport Cost:",
+                                  style: TextStyle(color: Colors.grey,
+                                      fontSize: 18, fontWeight: FontWeight.w300)),
+                           Text(" ${widget.pay[1]} ",
+                                  style: TextStyle(color: Colors.white,
+                                      fontSize: 18)),
+                            ],
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text('Packaging Cost:',
+                                  style: TextStyle(color: Colors.grey, fontWeight: FontWeight.w300,
+                                      fontSize: 18)),
+                              Text(' ${widget.pay[3]}',
+                                  style: TextStyle(color: Colors.white,
+                                      fontSize: 18)),
+                            ],
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text("Service with tax:",
+                                  style: TextStyle(color: Colors.grey, fontWeight: FontWeight.w300,
+                                      fontSize: 18)),
+                           Text(" ${widget.pay[2]}",
+                                  style: TextStyle(color: Colors.white,
+                                      fontSize: 18)),
+                            ],
+                          ),
                           // Text("Loading and unloading service:",style: TextStyle(color: Colors.white,fontSize: 18)),
 
                         ],
@@ -95,9 +131,9 @@ class _Payment_systemState extends State<Payment_system> {
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.fromLTRB(0, 15, 0, 15),
+                    padding: const EdgeInsets.fromLTRB(0, 35, 0, 15),
                     child: Text('How do you want to pay?',
-                      style: TextStyle(fontSize: 25),),),
+                      style: TextStyle(fontSize: 20),),),
                   build_vancard(context),
                   build_Wallet(context),
                   build_Manual(context)
@@ -125,7 +161,7 @@ class _Payment_systemState extends State<Payment_system> {
 
         child: Card(color: Colors.grey,
           shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(15)
+              borderRadius: BorderRadius.circular(25)
           ),
           child: Container(
             padding: const EdgeInsets.all(15.0),
@@ -133,6 +169,7 @@ class _Payment_systemState extends State<Payment_system> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
+                SizedBox(width: 10,),
                 Text('Pay from my wallet'),
                 Icon(Icons.arrow_forward_ios)
               ],
@@ -157,7 +194,7 @@ class _Payment_systemState extends State<Payment_system> {
         },
         child: Card(color: Colors.grey,
           shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(15)
+              borderRadius: BorderRadius.circular(25)
           ),
           child: Container(
             padding: const EdgeInsets.all(15.0),
@@ -165,7 +202,8 @@ class _Payment_systemState extends State<Payment_system> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text('Pay on Pick Up'),
+                SizedBox(width: 10,),
+                Text('Pay on Drop off'),
                 Icon(Icons.arrow_forward_ios)
               ],
             ),
@@ -189,15 +227,15 @@ class _Payment_systemState extends State<Payment_system> {
         },
         child: Container(
           height: 60,
-          child: Card(color: Colors.grey,
+          child: Card(color: Color(0xff132877),
             shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(15)
+                borderRadius: BorderRadius.circular(25)
             ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 build_logo(),
-                Text('Use Van it card')
+                Text('Use Van it card', style: TextStyle(color: Colors.white),)
               ],
             ),
           ),
@@ -210,8 +248,8 @@ class _Payment_systemState extends State<Payment_system> {
     return Card(
       // height: 25,
       // width: 40,
-      color: Colors.blue[900],
-      child: Text('VAN it'),
+      color: Color(0xff132877),
+      child: Image.asset("Assets/fast-delivery-modified.png",height: 60,width: 50,),
     );
   }
 
@@ -237,9 +275,9 @@ class _Payment_systemState extends State<Payment_system> {
                 passwordEnteredCallback: _passcodeEntered,
                 cancelButton: cancelButton,
                 deleteButton: const Text(
-                  'Delete',
+                  'Clear',
                   style: TextStyle(fontSize: 16, color: Colors.white),
-                  semanticsLabel: 'Delete',
+                  semanticsLabel: 'Clear',
                 ),
                 shouldTriggerVerification: _verificationNotifier.stream,
                 backgroundColor: Colors.black.withOpacity(0.8),

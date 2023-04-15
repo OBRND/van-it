@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:expandable/expandable.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart';
 import 'package:passcode_screen/circle.dart';
 import 'package:passcode_screen/keyboard.dart';
 import 'package:passcode_screen/passcode_screen.dart';
@@ -39,13 +40,17 @@ class _Pay_walletState extends State<Pay_wallet> {
   int pay;
   bool checked = false;
 
+  Future getbal() async{
+    final user = Provider.of<UserFB?>(context);
+    List account = await DatabaseService(uid: user!.uid).getaccount();
+    return account;
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        extendBodyBehindAppBar: true,
         appBar: AppBar(
-          backgroundColor: Colors.transparent,
+          backgroundColor: Color(0xff4A5280),
           title: Text('Your wallet',
             style: TextStyle(color: Colors.white, fontSize: 25),),
           elevation: 0,
@@ -54,7 +59,7 @@ class _Pay_walletState extends State<Pay_wallet> {
             child: Stack(
                 children: [
                   Container(
-                    height: 220,
+                    height: 100,
                     decoration: BoxDecoration(
                       color: Color(0xff4A5280),
                       borderRadius: BorderRadius.only(
@@ -64,7 +69,7 @@ class _Pay_walletState extends State<Pay_wallet> {
                   ),
                   Column(
                       children: [
-                        SizedBox(height: 80),
+                        SizedBox(height: 10),
                         build_details(),
                         Padding(
                           padding: const EdgeInsets.fromLTRB(20, 25, 10, 15),
@@ -72,16 +77,16 @@ class _Pay_walletState extends State<Pay_wallet> {
                             TextSpan(
                               text: 'An amount of ',
                               style: TextStyle(
-                                  color: Colors.black, fontSize: 20),),
+                                  color: Colors.black, fontSize: 18, fontWeight: FontWeight.w300),),
                             TextSpan(
-                                text: "$pay",
+                                text: "$pay Br.",
                                 style: TextStyle(color: Colors.red,
-                                    fontSize: 25,
+                                    fontSize: 20,
                                     fontWeight: FontWeight.bold)),
                             TextSpan(
-                                text: ' Br. will be deducted from your wallet',
+                                text: ' will be deducted from your wallet.',
                                 style: TextStyle(
-                                    color: Colors.black, fontSize: 20)),
+                                    color: Colors.black, fontSize: 18, fontWeight: FontWeight.w300)),
                           ]
                             // ,style: TextStyle(fontSize: 20),),)
                           ),
@@ -98,6 +103,7 @@ class _Pay_walletState extends State<Pay_wallet> {
                           final user = Provider.of<UserFB?>(
                               context, listen: false);
                           final uid = user!.uid;
+                          print('${[ order, locations, Pickup_date, pay ]}');
                           await DatabaseService(uid: user.uid).orders(
                               order, locations, Pickup_date, pay, 'Paid');
                           Navigator.of(context).pushReplacement(
@@ -156,13 +162,14 @@ class _Pay_walletState extends State<Pay_wallet> {
             child: Column(
               children: [
                 const Text(
-                  '1. Any change in Order or cancelation of the order should be done 4 hours prior to delivery.\n '
+                  '1. Any change in Order or cancelation of the order should be done prior to the start of delivery delivery.\n '
+                      ' - There will be penalities for any cancelations after the start of the order\n'
                       ' - We are not responsible for any misunderstanding after this set time\n'
                       ' - In the event of such changes after the order a calculated price will be deducted from your van it account\n',
-                  style: TextStyle(fontSize: 16), textAlign: TextAlign.start,),
+                  style: TextStyle(fontSize: 15), textAlign: TextAlign.start,),
                 SizedBox(height: 10,),
                 Text('Finish your order by agreeing to these terms',
-                  style: TextStyle(color: Colors.red, fontSize: 20),)
+                  style: TextStyle(color: Colors.red, fontSize: 18),)
               ],
             ),
           ),
@@ -177,27 +184,41 @@ class _Pay_walletState extends State<Pay_wallet> {
   }
 
   Widget build_details() {
-    return Card(
-        color: Color(0xff4A5280),
-        child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text("Account holder: ", style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 25,
-                    fontWeight: FontWeight.w100)),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text("Your credits: ", style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 25,
-                    fontWeight: FontWeight.w100)),
-              ),
-            ]
-        )
+    return FutureBuilder(
+        future: getbal(),
+      builder: (BuildContext context,AsyncSnapshot snapshot) {
+        print('future returned: ${snapshot.data}');
+        switch (snapshot.connectionState) {
+          case ConnectionState.waiting:
+            return const Center(
+                child: CircularProgressIndicator(
+                  color: Colors.black38,
+                ));
+          default:
+            return Card(
+                color: Color(0xff4A5280),
+                child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text("Account holder: ${snapshot.data[0]}", style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 18,
+                            fontWeight: FontWeight.w100)),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text("Your credits: ${snapshot.data[1]}", style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 18,
+                            fontWeight: FontWeight.w100)),
+                      ),
+                    ]
+                )
+            );
+        }
+        }
     );
   }
 }

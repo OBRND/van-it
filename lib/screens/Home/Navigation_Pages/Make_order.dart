@@ -1,5 +1,7 @@
+import 'package:animated_type_ahead_searchbar/animated_type_ahead_searchbar.dart';
 import 'package:expandable_bottom_sheet/expandable_bottom_sheet.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:provider/provider.dart';
 import 'package:van_lines/screens/Home/Navigation_Pages/Make%20an%20order/Payment_system.dart';
 import 'package:van_lines/screens/Home/Navigation_Pages/Make%20an%20order/Service_forms/Home_details.dart';
@@ -10,6 +12,7 @@ import 'package:van_lines/services/map_services.dart';
 import 'package:van_lines/shared/Payment_item.dart';
 import '../../../models/User.dart';
 import '../../../services/Database.dart';
+import 'package:get/get.dart';
 
 
 
@@ -17,11 +20,12 @@ class Make_order extends StatefulWidget {
   // const Make_order({Key? key}) : super(key: key);
   final List Total_choices;
   final List Items;
-  Make_order(this.Total_choices, this.Items);
+  final int type;
+  Make_order(this.Total_choices, this.Items, this.type);
 
 
   @override
-  State<Make_order> createState() => _Make_orderState(Total_choices, Items);
+  State<Make_order> createState() => _Make_orderState(Total_choices, Items, type);
 }
 MapController controller = MapController(
   initMapWithUserPosition: false,
@@ -33,7 +37,9 @@ MapController controller = MapController(
 class _Make_orderState extends State<Make_order> {
   final List Total_choices;
   final List Items;
-  _Make_orderState(this.Total_choices, this.Items);
+  final int type;
+
+  _Make_orderState(this.Total_choices, this.Items, this.type);
 
   GlobalKey<ExpandableBottomSheetState> key = new GlobalKey();
   bool isvisible = true;
@@ -53,11 +59,20 @@ class _Make_orderState extends State<Make_order> {
   String time = '';
   List Choices = [];
   bool ischecked = false;
+  GeoPoint? custom_picked;
 
 
   // List home_details =  Home_detailsState().Total_choices;
 
 
+@override
+  void dispose() {
+    // TODO: implement dispose
+  controller.dispose();
+  super.dispose();
+  }
+
+  TextEditingController textController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -88,7 +103,87 @@ class _Make_orderState extends State<Make_order> {
       appBar: AppBar(
         elevation: 0,
         backgroundColor: Colors.transparent,
-        title: Text('Set Address and Pickup time', style: TextStyle(color: Colors.black54)),
+        title: Text('Set Address and Pickup time'.tr, style: TextStyle(color: Colors.black54)),
+        bottom: PreferredSize(
+          preferredSize: const Size.fromHeight(80.0),
+          child: Container(
+            width: MediaQuery.of(context).size.width,
+            child:
+            // AnimatedTypeAheadSearchBar(
+            //   width: MediaQuery.of(context).size.width * 0.88,
+            //   onSuffixTap: null,
+            //   itemBuilder: (context, suggestion) {
+            //               return ListTile(
+            //                 leading: Icon(Icons.location_on),
+            //                 title: Text((suggestion as SearchInfo).address!.name!),
+            //                 subtitle: Text((suggestion).address!.country!),
+            //               );
+            //   },
+            //   onSuggestionSelected: (suggestion) async {
+            //               await controller
+            //                   .goToLocation((suggestion as SearchInfo?)!.point!);
+            //             },
+            //   suggestionCallback: (pattern) async {
+            //               if (pattern.isNotEmpty) return await addressSuggestion(pattern);
+            //               return Future.value();
+            //             },
+            // ),
+            FractionallySizedBox(
+              widthFactor: 0.90,
+              child: Center(
+                child:  Container(
+                  height: 75,
+                  alignment: Alignment.center,
+                  child: TypeAheadField(
+                    textFieldConfiguration: TextFieldConfiguration(
+                      autofocus: false,
+                      maxLines: 1,
+                      controller: textController,
+                      decoration: InputDecoration(
+                          contentPadding: EdgeInsets.all(3),
+                          labelText: "Search by location".tr,
+                          labelStyle: TextStyle(
+                              color: Colors.black
+                          ),
+                          focusedBorder:  OutlineInputBorder(
+                              borderSide: BorderSide(
+                                width: 1.3,
+                                color: Colors.black,
+                              )
+                          ),
+                          border: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                width: 0.8,
+                              )
+                          )
+                      ),
+                    ),
+                      noItemsFoundBuilder: (context) {
+                      return Text('Sorry, no luck'.tr);},
+                     errorBuilder: (context, error) {
+                      return Text('     ');},
+                      suggestionsCallback: (pattern) async {
+                      if (pattern.isNotEmpty) return await addressSuggestion(pattern);
+                      return Future.value();
+                    },
+                    suggestionsBoxDecoration: SuggestionsBoxDecoration(),
+                    itemBuilder: (context, suggestion) {
+                      return ListTile(
+                        leading: Icon(Icons.location_on),
+                        title: Text((suggestion as SearchInfo).address!.name!),
+                        subtitle: Text((suggestion).address!.country!),
+                      );
+                    },
+                    onSuggestionSelected: (suggestion) async {
+                      await controller
+                          .goToLocation((suggestion as SearchInfo?)!.point!);
+                    },
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
         // backgroundColor: Colors.blue,
       ),
       body: ExpandableBottomSheet(
@@ -151,11 +246,35 @@ class _Make_orderState extends State<Make_order> {
                       FloatingActionButton.extended(
                       extendedPadding: EdgeInsets.all(13),
                       tooltip: 'Select a custom marker',
-                      label: ElevatedButton(onPressed: (){},
+                      label: ElevatedButton(
+                        onPressed: custom_picked == null ? () async{
+                        GeoPoint? p = await showSimplePickerLocation(
+                          radius: 20,
+                          context: context,
+                          initZoom: 15,
+                          isDismissible: true,
+                          title: "Pick custom location".tr,
+                          textConfirmPicker: "pick".tr,
+                          // initCurrentUserPosition: true,
+                        );
+                        setState(() {
+                          custom_picked = p;
+                        });
+                        await controller.addMarker(
+                            p!,
+                            markerIcon: const MarkerIcon(
+                              icon: Icon(
+                                Icons.location_on,
+                                color: Colors.red,
+                                size: 56,
+                              ),
+                            ));
+
+                      }: null,
                         style: ButtonStyle(
                           backgroundColor: MaterialStateProperty.resolveWith<Color?>((Set<MaterialState> states) =>Colors.grey)
                         ),
-                      child: Text('Slect a custom pick up location'),),
+                      child: Text('Select a custom pick up location'.tr),),
                       isExtended: floatExtended,
                       icon: Icon(
                         floatExtended == true ? Icons.close : sm == false ? Icons.radio_button_on: Icons.check,
@@ -185,7 +304,7 @@ class _Make_orderState extends State<Make_order> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   FloatingActionButton.extended(
-                    label: Text( dateIsSet == true ? '$dateDisplay' : 'Set the Date of pick up',
+                    label: Text( dateIsSet == true ? '$dateDisplay' : 'Set the Date of pick up'.tr,
                     style: TextStyle(color: dateIsSet == true ? Colors.black : Colors.white),),
                     backgroundColor: Colors.blueGrey,
                     onPressed: pickDateTime,
@@ -195,21 +314,23 @@ class _Make_orderState extends State<Make_order> {
                     width: 20,
                   ),
                   FloatingActionButton.extended(
-                    label: Text('Next'),
+                    label: Text('Next'.tr),
                     backgroundColor: Colors.grey,
-                    onPressed: !ischecked && dateIsSet ? (){
-                      const snackBar = SnackBar(
-                        content: Text('Select a destination location'),
+                    onPressed: !ischecked && dateIsSet
+                        // || custom_picked == null && dateIsSet
+                        ? (){
+                      SnackBar snackBar = SnackBar(
+                        content: Text('Select a destination location'.tr),
                       );
                       ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                    } : ischecked && !dateIsSet ?  (){
-                      const snackBar = SnackBar(
-                        content: Text('Set a Pickup date to proceed'),
+                    } : ischecked && !dateIsSet || custom_picked != null && !dateIsSet?  (){
+                      SnackBar snackBar = SnackBar(
+                        content: Text('Set a Pickup date to proceed'.tr),
                       );
                       ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                    } : !ischecked && !dateIsSet ?  (){
-                      const snackBar = SnackBar(
-                        content: Text('Select a destination location and a Pickup date '),
+                    } : !ischecked && !dateIsSet  || custom_picked == null && !dateIsSet?  (){
+                      SnackBar snackBar = SnackBar(
+                        content: Text('Select a destination location and a Pickup date '.tr),
                       );
                       ScaffoldMessenger.of(context).showSnackBar(snackBar);
                     } : () {
@@ -227,11 +348,12 @@ class _Make_orderState extends State<Make_order> {
            ),
 
         expandableContent: Container(
-          height: MediaQuery.of(context).size.height*.25,
+          // height: MediaQuery.of(context).size.height*.25,
           color: Colors.transparent,
           child: Visibility(
             visible: isvisible,
             child: Column(
+              mainAxisSize: MainAxisSize.min,
               children: [
                 _buildPlayerModelList(),
                 // _buildPlayerModelList(Exptext1, route1, 1),
@@ -239,12 +361,13 @@ class _Make_orderState extends State<Make_order> {
                 ElevatedButton(onPressed: () async {
                   key.currentState?.contract();
                   print(marker);
-                  Locations loc = Locations(start: services().user_position, destination: marker);
+                  Locations loc = Locations(start: custom_picked == null ? services().user_position :
+                  [custom_picked!.latitude, custom_picked!.longitude], destination: marker);
                   print(services().user_position);
                   List Choices = Total_choices;
                   print(Choices);
                   Payment_item items = Payment_item(
-                      Service_type: 1,
+                      Service_type: type,
                       Package: Choices[0],
                       Items: Items,
                       has_elevator_pickup: Choices[3],
@@ -258,7 +381,19 @@ class _Make_orderState extends State<Make_order> {
                   Navigator.of(context).push(MaterialPageRoute(
                       builder: (context) => Payment_system(pay: pay, order: items, locations: loc,Pickup_date: dateTime)));
                   },
-                  child: Text('Submit'),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.green,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(15))
+                    )
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text('Continue'.tr),
+                      Icon(Icons.double_arrow_outlined),
+                    ],
+                  ),
                   // color: Colors.green,
                 )
               ],
@@ -272,23 +407,48 @@ class _Make_orderState extends State<Make_order> {
 
   int index = 0;
   Widget _buildPlayerModelList() {
-    return Card(
-      elevation: 1,
-      color: Colors.transparent,
-        child: Wrap(
-          children: [
-            Text.rich(
-        TextSpan(
-            children:[
-          TextSpan( text: 'The total Distance is :', style: TextStyle(color: Colors.black, fontSize: 18)),
-          TextSpan( text: '$dis Km \n', style: TextStyle(color: Colors.black, fontSize: 20)),
-          TextSpan( text: 'The total Duration of delivery is:', style: TextStyle(color: Colors.black, fontSize: 18)),
-          TextSpan( text: '$time seconds\n', style: TextStyle(color: Colors.black, fontSize: 20)),
-            ])
-            )
-          ],
-        ),
-    );
+    return Center(child:
+    Card(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Center(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text('Distance is: '.tr , style: TextStyle(color: Colors.black, fontSize: 20, fontWeight: FontWeight.w300)),
+                Text(dis == 'Calculating'.tr ? dis: ' ${double.parse(dis).toStringAsFixed(1)} Km', style: (TextStyle(color: Colors.red,fontSize: 20,fontWeight: FontWeight.bold))),
+              ],
+            ),
+          ),
+          SizedBox(height: 10),
+          Text('The package will arive in:'.tr,style: TextStyle(color: Colors.black, fontSize: 18, fontWeight: FontWeight.w300)),
+          Text( time == 'Calculating'.tr ? time : double.parse(time) <= 60 ? ' ${(double.parse(time)/60).toStringAsFixed(0)} seconds \n'
+              : double.parse(time) <= 3600 ? '${(double.parse(time)/60).toStringAsFixed(0) } minutes'
+              : '${(double.parse(time)/60).toStringAsFixed(0)} hours - '
+              '${((double.parse(time)/60).toStringAsFixed(4)).substring(((double.parse(time)/60).toStringAsFixed(4)).length - 4 ,
+              ((double.parse(time)/60).toStringAsFixed(4)).length - 3)} minutes\n',
+              style: (TextStyle(color: Colors.red, fontSize: 18, fontWeight: FontWeight.bold))),
+        ],
+      ),
+    ));
+    // return Card(
+    //   elevation: 1,
+    //   color: Colors.transparent,
+    //     child: Wrap(
+    //       children: [
+    //         Text.rich(
+    //     TextSpan(
+    //         children:[
+    //       TextSpan( text: 'The total Distance is :', style: TextStyle(color: Colors.black, fontSize: 18)),
+    //       TextSpan( text: '$dis Km \n', style: TextStyle(color: Colors.black, fontSize: 20)),
+    //       TextSpan( text: 'The total Duration of delivery is:', style: TextStyle(color: Colors.black, fontSize: 18)),
+    //       TextSpan( text: '$time seconds\n', style: TextStyle(color: Colors.black, fontSize: 20)),
+    //         ])
+    //         )
+    //       ],
+    //     ),
+    // );
   }
 
   Future select() async {
@@ -324,55 +484,71 @@ class _Make_orderState extends State<Make_order> {
   }
   void drawmultipleroads () async {
     // final int i = 20;
-    final configs = [
-      MultiRoadConfiguration(
-        startPoint: GeoPoint(
+    // final configs = [MultiRoadConfiguration(
+    //     startPoint: GeoPoint(
+    //       latitude: services.fu,
+    //       longitude:services.gu ,
+    //     ),
+    //     destinationPoint: GeoPoint(
+    //       latitude: marker[0]+0.00000000000001,
+    //       longitude: marker[1]+0.00000000000001,
+    //     ),
+    //     roadOptionConfiguration: MultiRoadOption(
+    //             roadColor: Colors.orange,
+    //
+    //           )
+    //   ),
+    //   // MultiRoadConfiguration(
+    //   //     startPoint: GeoPoint(
+    //   //       latitude: p.latitude+0.0005,
+    //   //       longitude: (p.longitude+0.0005),
+    //   //     ),
+    //   //     destinationPoint: GeoPoint(
+    //   //       latitude: services.fu,
+    //   //       longitude: services.gu,
+    //   //     ),
+    //   //     roadOptionConfiguration: MultiRoadOption(
+    //   //       roadColor: Colors.orange,
+    //   //     )
+    //   // ),
+    //   // MultiRoadConfiguration(
+    //   //   startPoint: GeoPoint(
+    //   //     latitude: p.latitude+0.001,
+    //   //     longitude: p.longitude+0.001,
+    //   //   ),
+    //   //   destinationPoint: GeoPoint(
+    //   //     latitude: services.fu,
+    //   //     longitude: services.gu,
+    //   //   ),
+    //   // )
+    // ];
+    RoadInfo roadInfo = await controller.drawRoad(
+        GeoPoint(
           latitude: services.fu,
           longitude:services.gu ,
         ),
-        destinationPoint: GeoPoint(
-          latitude: marker[0]+0.00000000000001,
-          longitude: marker[1]+0.00000000000001,
-        ),
-        roadOptionConfiguration: MultiRoadOption(
-                roadColor: Colors.orange,
-
-              )
+      GeoPoint(
+        latitude: marker[0]+0.00000000000001,
+        longitude: marker[1]+0.00000000000001,
       ),
-      // MultiRoadConfiguration(
-      //     startPoint: GeoPoint(
-      //       latitude: p.latitude+0.0005,
-      //       longitude: (p.longitude+0.0005),
-      //     ),
-      //     destinationPoint: GeoPoint(
-      //       latitude: services.fu,
-      //       longitude: services.gu,
-      //     ),
-      //     roadOptionConfiguration: MultiRoadOption(
-      //       roadColor: Colors.orange,
-      //     )
-      // ),
-      // MultiRoadConfiguration(
-      //   startPoint: GeoPoint(
-      //     latitude: p.latitude+0.001,
-      //     longitude: p.longitude+0.001,
-      //   ),
-      //   destinationPoint: GeoPoint(
-      //     latitude: services.fu,
-      //     longitude: services.gu,
-      //   ),
-      // )
-    ];
-    final listRoadInfo = await controller.drawMultipleRoad(
-        configs,
-        commonRoadOption: MultiRoadOption(
-          roadColor: Colors.red,
-          roadType: RoadType.car,)
+      roadType: RoadType.car,
+      roadOption: RoadOption(
+        roadWidth: 10,
+        roadColor: Colors.blue,
+        showMarkerOfPOI: false,
+        zoomInto: true,
+      ),
     );
-    print(listRoadInfo);
+    // final listRoadInfo = await controller.drawMultipleRoad(
+    //     roadInfo,
+    //     commonRoadOption: MultiRoadOption(
+    //       roadColor: Colors.red,
+    //       roadType: RoadType.car,)
+    // );
+    // print(listRoadInfo);
     setState(() {
-      Route_distance= listRoadInfo[0].distance;
-      Route_time= listRoadInfo[0].duration;
+      Route_distance= roadInfo.distance;
+      Route_time= roadInfo.duration;
       // Config_route[1]= listRoadInfo[1];
       // Config_route[2]= listRoadInfo[2];
     });

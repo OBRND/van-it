@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:van_lines/screens/Home/Navigation_Pages/Deposit/Deposit.dart';
 import 'package:van_lines/screens/Home/Navigation_Pages/Deposit/Buy_card.dart';
@@ -6,6 +7,7 @@ import 'package:van_lines/screens/Home/Navigation_drawer.dart';
 
 import '../../../models/User.dart';
 import '../../../services/Database.dart';
+import 'package:get/get.dart';
 
 class Wallet extends StatefulWidget {
   const Wallet({Key? key}) : super(key: key);
@@ -19,7 +21,7 @@ class Wallet extends StatefulWidget {
 // }
 
 class _WalletState extends State<Wallet> {
-  int balance= 0;
+  List balance= [ 0,0];
 @override
   Widget build(BuildContext context) {
   final user = Provider.of<UserFB?>(context);
@@ -27,7 +29,7 @@ class _WalletState extends State<Wallet> {
 
   Future display() async{
 
-      int x = await databaseservice.balance();
+      List x = await databaseservice.balance();
       print(x);
         balance = x;
       // setState((){
@@ -78,10 +80,10 @@ class _WalletState extends State<Wallet> {
                                 padding: EdgeInsets.fromLTRB(70,0,30,5),
                                 child: RichText(text: TextSpan(
                                   children: [
-                                    TextSpan(text: "Your Balance",style:TextStyle(color: Colors.grey,fontSize: 20)),
-                                    TextSpan(text: '\n$balance',style:TextStyle(fontSize: 30)),
+                                    TextSpan(text: "Your Balance".tr,style:TextStyle(color: Colors.grey,fontSize: 20)),
+                                    TextSpan(text: '\n${balance[0]}',style:TextStyle(fontSize: 30)),
                                     TextSpan(text: ' Br.',style:TextStyle(color: Colors.grey,fontSize: 20)),
-                                    TextSpan(text: '\n\n Your Card',style:TextStyle(color: Colors.grey,fontSize: 15)),
+                                    TextSpan(text: '\n\n Your Card'.tr,style:TextStyle(color: Colors.grey,fontSize: 15)),
                                   ],),))
                             // ElevatedButton.icon(onPressed: () {}, icon: IconButto, label: label)
                           ]
@@ -89,10 +91,42 @@ class _WalletState extends State<Wallet> {
                       // SizedBox(height: 10,),
                       Container(
                         padding: const EdgeInsets.fromLTRB(10,10,10,10),
-                        child: Column(
+                        child: balance[1] == 0 && balance[2] == '' ?
+                        Card(
+                          elevation: 5,
+                          color: Color(0xFF090943),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(15)
+                          ),
+                          child: Container(
+                            height: 200,
+                            width: MediaQuery.of(context).size.width * .75,
+                            padding: const EdgeInsets.only(left: 15,right: 15,bottom: 25),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                _buildlogo(),
+                                Text('You don\'t have a card yet. We have got excellent offers for you.'.tr, style:TextStyle(color: Colors.grey,fontSize: 15)),
+                                ElevatedButton(onPressed: (){
+                                  Navigator.of(context).pushReplacement(MaterialPageRoute(
+                                      builder: (context) => Buy_card()));
+                                },
+                                    style: ElevatedButton.styleFrom(
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(18.0),
+                                        side: BorderSide(color: Colors.white54),),
+                                      backgroundColor: Colors.blue[600]
+                                    ),
+                                    child: Text('Buy card'.tr))
+                              ],
+                            ),
+                          ),
+                        )
+                            : Column(
                           children: [
-                            _buildcard(cardnumber: "0000 0111 1110 0001 ",
-                                accountholder: 'Obrand',
+                            _buildcard(balance: "${balance[1]} Br",
+                                accountholder: '${balance[2]}',
                                 amount: "0",
                                 cardexpiration: "10/01/2023")
                           ],
@@ -110,18 +144,62 @@ class _WalletState extends State<Wallet> {
                           shape:  RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(20)),
                           backgroundColor: Colors.indigo,
-                          child: Text('Deposit'),
+                          child: Text('Deposit'.tr),
                         ),
                       ),
                       SizedBox(height: 20),
-                      Container(
-                        height: 200,
-                        child: ListView(
-                          scrollDirection: Axis.horizontal,
-                          children: [
-                            Text(' Latest spendings',style:TextStyle(color: Colors.blueGrey,fontWeight: FontWeight.bold,fontSize: 20,)),
-                          ],
-                        ),
+                      Column(
+                        children: [
+                           Text('Latest deposits'.tr, style: TextStyle(color: Colors.blueGrey,
+                            fontWeight: FontWeight.bold, fontSize: 20,)),
+                          FutureBuilder(
+                            future: databaseservice.retrievehistory(),
+                              builder: (context,AsyncSnapshot snapshot) {
+                                TextStyle style1 =  TextStyle(color: Colors.black54, fontSize: 16, fontWeight: FontWeight.w600);
+                                TextStyle style2 =  TextStyle(color: Colors.indigo, fontSize: 20, fontWeight: FontWeight.w600);
+                                List<Widget> spendings = [];
+                              switch(snapshot.connectionState) {
+                                case ConnectionState.waiting:
+                                  return const Center(
+                                      child: CircularProgressIndicator(
+                                        color: Colors.grey
+                                      ));
+                              // case (ConnectionState.done) :
+                                default:
+                                  for(int i = 0; i < snapshot.data.length; i++){
+                                    spendings.add(Card(child: Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Column(
+                                        children: [
+                                          Row(
+                                            children: [
+                                              Text(snapshot.data[i][0] == 0 ?' ' : 'Amount:'.tr, style: style1),
+                                              Text(snapshot.data[i][0] ==0 ? '${snapshot.data[i][3]}' :
+                                              '${snapshot.data[i][0]} Br'.tr, style: style2,),
+                                            ],
+                                          ),
+                                          Row(
+                                            children: [
+                                              Text('Status:'.tr, style: style1,),
+                                              Text(snapshot.data[i][2], style: style1.copyWith(
+                                                  color:snapshot.data[i][2] == 'Under review'? Colors.orange:
+                                                  snapshot.data[i][2] == 'Approved'? Colors.green: Colors.red),),
+                                            ],
+                                          ),
+                                          Text('${DateFormat('yyyy-MM-dd - h:mm a').format(snapshot.data[i][1])}'),
+                                        ],
+                                      ),
+                                    )));
+                                  }
+                                  return Container(
+                                    height: MediaQuery.of(context).size.height * .5,
+                                    child: ListView(
+                                      children: spendings
+                                    ),
+                                  );
+                              }}
+                          ),
+                        ],
                       )
                     ]
                 ),
@@ -145,7 +223,7 @@ class _WalletState extends State<Wallet> {
       Navigator.of(context).pushReplacement(MaterialPageRoute(
           builder: (context) => Deposit()));
     },
-      child: Text("Deposit to wallet"),
+      child: Text("Deposit to wallet".tr),
       shape: RoundedRectangleBorder(borderRadius:BorderRadius.circular(20) ),
       backgroundColor: Colors.indigo,
     );
@@ -153,20 +231,20 @@ class _WalletState extends State<Wallet> {
       Navigator.of(context).pushReplacement(MaterialPageRoute(
           builder: (context) => Buy_card()));
     },
-      child: Text("Buy card"),
+      child: Text("Buy card".tr),
       shape: RoundedRectangleBorder(
           borderRadius:BorderRadius.circular(20) ),
       backgroundColor: Colors.deepPurpleAccent,
     );    // set up the AlertDialog
     AlertDialog alert = AlertDialog(
       backgroundColor: Colors.white70,
-      title: Text("How would you like to Deposit?",
+      title: Text("How would you like to Deposit?".tr,
           style:TextStyle(
             color: Colors.black,
             fontWeight: FontWeight.bold,
             fontSize: 20,)
       ),
-      content: Text("You can choose to deposit to your wallet directly, or buy our van-card for a lesser fee"),
+      content: Text("You can choose to deposit to your wallet directly, or buy our van-card for a lesser fee".tr),
       actions: [
         Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -187,7 +265,7 @@ class _WalletState extends State<Wallet> {
       },
     );
   }
-  Widget _buildcard({required String cardnumber,required String accountholder,required String amount,required String cardexpiration}){
+  Widget _buildcard({required String balance,required String accountholder,required String amount,required String cardexpiration}){
    return Card(
      elevation: 5,
      color: Color(0xFF090943),
@@ -196,7 +274,7 @@ class _WalletState extends State<Wallet> {
      ),
      child: Container(
        height: 180,
-       width: 260,
+       width: MediaQuery.of(context).size.width * .75,
        padding: const EdgeInsets.only(left: 15,right: 15,bottom: 25),
        child: Column(
          crossAxisAlignment: CrossAxisAlignment.start,
@@ -204,18 +282,18 @@ class _WalletState extends State<Wallet> {
          children: [
            _buildlogo(),
            Padding(
-             padding: const EdgeInsets.only(top: 20),
-             child: Text('$cardnumber',style: TextStyle(color: Colors.white, fontSize: 21,fontFamily: 'CourierPrime'),),
+             padding: const EdgeInsets.only(top: 10),
+             child: Text('$balance',style: TextStyle(color: Colors.white, fontSize: 21,fontFamily: 'CourierPrime'),),
            ),
            Row(
              mainAxisAlignment: MainAxisAlignment.spaceBetween,
              children: [
                _builddetail(
-                   label: 'Account Holder',
+                   label: 'Account Holder'.tr,
                  value: accountholder
                ),
                _builddetail(
-                 label: 'Expiration Date',
+                 label: 'Expiration Date'.tr,
                  value: cardexpiration,
                ),
              ],
@@ -230,7 +308,7 @@ class _WalletState extends State<Wallet> {
     crossAxisAlignment: CrossAxisAlignment.start,
   children: [
     Text('$label',style: TextStyle(color: Colors.grey, fontSize: 10, fontWeight: FontWeight.bold),),
-    Text('$value',style: TextStyle(color: Colors.white, fontSize: 15,fontWeight: FontWeight.bold),),
+    Text('$value',style: TextStyle(color: Colors.white, fontSize: 12,fontWeight: FontWeight.bold),),
 
   ],
   );
@@ -239,7 +317,7 @@ class _WalletState extends State<Wallet> {
   Widget _buildlogo(){
   return Row(
     children: [
-      Image.asset("Assets/download.png",height: 80,width: 65,),
+      Image.asset("Assets/fast-delivery-modified.png",height: 80,width: 65,),
       // Image.asset("Assets/img1.jpg",height: 25,width: 20,),
 
     ],

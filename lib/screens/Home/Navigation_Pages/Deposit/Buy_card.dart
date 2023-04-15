@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:van_lines/screens/Home/Navigation_Pages/Deposit/Card_form.dart';
+import 'package:get/get.dart';
 
 class Buy_card extends StatefulWidget {
   const Buy_card({Key? key}) : super(key: key);
@@ -46,7 +47,16 @@ class _Buy_cardState extends State<Buy_card> {
   }
 
   Widget buildform(){
+    String label2='First name *';
+    String label3='Middle name *';
+    String label4='Last name *';
+
+    String hint2='What is your legal First name?';
+    String hint3='What is your legal Middle name?';
+    String hint4='What is your legal last name?';
+
     return Container(
+
       height: 241,
       child: Column(
         children: [
@@ -54,9 +64,9 @@ class _Buy_cardState extends State<Buy_card> {
             height: 20,
           ),
           TextFormField(
-            decoration: const InputDecoration(
-              hintText: 'What is your legal First name?',
-              labelText: 'First name *',
+            decoration:  InputDecoration(
+              hintText: hint2.tr,
+              labelText: label2.tr,
             ),
             onChanged: (val){
               setState(() => Firstname = val);
@@ -64,9 +74,9 @@ class _Buy_cardState extends State<Buy_card> {
             validator: (val) => val!.length <3 ? 'Enter a Valid legal name' : null,
           ),
           TextFormField(
-            decoration: const InputDecoration(
-              hintText: 'What is your legal Middle name?',
-              labelText: 'Middle name *',
+            decoration:  InputDecoration(
+              hintText: hint3.tr,
+              labelText: label3.tr,
             ),
             onChanged: (val){
               setState(() => Middlename = val);
@@ -74,9 +84,9 @@ class _Buy_cardState extends State<Buy_card> {
             validator: (val) => val!.length <3 ? 'Enter a Valid legal name' : null,
           ),
           TextFormField(
-            decoration: const InputDecoration(
-              hintText: 'What is your legal last name?',
-              labelText: 'Last name *',
+            decoration:  InputDecoration(
+              hintText: hint4.tr,
+              labelText: label4.tr,
             ),
             onChanged: (val){
               setState(() => Lastname = val);
@@ -179,7 +189,7 @@ class _Buy_cardState extends State<Buy_card> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  _buildlogo(),
+                  _buildlogo(cardtype),
                   Padding(
                     padding: const EdgeInsets.only(top: 10),
                     child: Text('$cardnumber',style: TextStyle(color: Colors.white, fontSize: 21,fontFamily: 'CourierPrime'),),
@@ -239,10 +249,11 @@ class _Buy_cardState extends State<Buy_card> {
 
   }
 
-  Widget _buildlogo(){
+  Widget _buildlogo(String cardtype){
+    print(cardtype);
     return Row(
       children: [
-        Image.asset("Assets/download.png",height: 60,width: 50,),
+        Image.asset(cardtype == 'card 1' || cardtype == 'card 3' ? "Assets/fast-delivery-modified.png" : "Assets/fast-delivery.png", height: 60,width: 50,),
         // Image.asset("Assets/img1.jpg",height: 25,width: 20,),
 
       ],

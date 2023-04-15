@@ -2,7 +2,11 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
+import 'package:van_lines/services/Database.dart';
+
+import '../../../../models/User.dart';
 
 
 class Qr_Scanner extends StatefulWidget {
@@ -27,9 +31,9 @@ class _Qr_ScannerState extends State<Qr_Scanner> {
   @override
   void reassemble() async{
     super.reassemble();
-    if (Platform.isAndroid) {
+
       controller!.pauseCamera();
-    }
+
       controller!.resumeCamera();
   }
 
@@ -59,7 +63,7 @@ class _Qr_ScannerState extends State<Qr_Scanner> {
 
   );
 
-  Widget build_result() =>   Container(
+  Widget build_result() => Container(
     padding: EdgeInsets.all(10),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10),
@@ -77,9 +81,11 @@ class _Qr_ScannerState extends State<Qr_Scanner> {
   }
 
   void onQRViewCreated(QRViewController controller){
+    final user = Provider.of<UserFB?>(context);
     setState(() => this.controller = controller);
 
     controller.scannedDataStream.listen((Qrcode) {
+      DatabaseService(uid: user!.uid).finishOrder(Qrcode!.code);
       setState(() {
         this.Qrcode = Qrcode;
       });

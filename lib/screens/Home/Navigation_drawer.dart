@@ -1,7 +1,9 @@
 import 'dart:async';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:passcode_screen/circle.dart';
 import 'package:passcode_screen/keyboard.dart';
 import 'package:passcode_screen/passcode_screen.dart';
@@ -22,6 +24,10 @@ import 'package:van_lines/services/Database.dart';
 import 'package:provider/provider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:van_lines/shared/Passcode.dart';
+import 'package:get/get.dart';
+import 'package:van_lines/models/localstring.dart';
+
+import '../../services/Storage.dart';
 
 
 class NavigationDrawer extends StatefulWidget {
@@ -62,22 +68,83 @@ late String password;
   final _formkey = GlobalKey<FormState>();
   final Auth_service _auth= Auth_service();
 
-
+  Future geturl() async{
+    final user = FirebaseAuth.instance.currentUser!;
+    Storage storage = Storage();
+    final result = await storage.getdata(user.uid);
+    print(result);
+    return result;
+  }
 
   @override
   Widget build(BuildContext context) {
      return Container(
-      width: 230,
-      child: Drawer(
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: <Widget>[
-              buildHeader(context),
-              buildMenuItems(context),
-            ],
+       color: Colors.white,
+      child: Stack(
+        children: [
+          Drawer(
+            width: MediaQuery.of(context).size.width *.75,
+            elevation: 0,
+            backgroundColor: Colors.black12,
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: <Widget>[
+                  buildHeader(context),
+                  buildMenuItems(context),
+                ],
+              ),
+            ),
           ),
-        ),
+          Positioned(
+            bottom: 0,
+            right: 0,
+            child: Align(
+              alignment: Alignment.bottomRight,
+              child: SpeedDial(
+                child: Text('Language'),
+                animatedIcon: AnimatedIcons.menu_close,
+                icon: Icons.language,
+                children: [
+                  SpeedDialChild(
+                    child: const Icon(Icons.language),
+                    label: 'Amharic',
+                    onTap: () {
+                      var locale=const Locale('Am','Et');
+                      Get.updateLocale(locale);
+                    },
+                  ),
+                  SpeedDialChild(
+                    child: const Icon(Icons.language),
+                    label: 'Tigrigna',
+                    onTap: () {
+                      var locale=const Locale('Tg','Et');
+                      Get.updateLocale(locale);
+                    },
+                  ),
+                  SpeedDialChild(
+                    child: const Icon(Icons.language),
+                    label: 'Oromiffa',
+                    onTap: () {
+                      var locale=const Locale('Or','Et');
+                      Get.updateLocale(locale);
+                    },
+                  ),
+                  SpeedDialChild(
+                    child: const Icon(Icons.language),
+                    label: 'English',
+                    onTap: () {
+                      var locale=const Locale('en','Us');
+                      Get.updateLocale(locale);
+                    },
+                  )
+                ],
+
+              ),
+            ),
+          ),
+
+        ],
       ),
     );
   }
@@ -112,11 +179,26 @@ late String password;
             child: Column(
               children: [
                 Row(
-                  children: const [
+                  children: [
                     SizedBox(width: 40),
-                    CircleAvatar(
-                      radius: 45,
-                      backgroundColor: Colors.lightBlueAccent,
+                    FutureBuilder(
+                      future: geturl(),
+                      builder:(context, snapshot) {
+                        switch(snapshot.connectionState){
+                          case ConnectionState.waiting:
+                            return CircleAvatar(
+                              radius: 40.0,
+                              child: Center(
+                                  child: CircularProgressIndicator(
+                                    color: Colors.white,
+                                  )),
+                            );
+                        // case (ConnectionState.done) :
+                          default:  return CircleAvatar(
+                            radius: 40.0,
+                            backgroundImage: NetworkImage('${snapshot.data}'),
+                            backgroundColor: Colors.transparent,);
+                        }}
                     ),
                     SizedBox(width: 20),
                     Icon(Icons.edit )
@@ -134,8 +216,8 @@ late String password;
                            _auth.sign_out();
 
                          },
-                           icon: const Icon(Icons.door_back_door_outlined),
-                           label: const Text('Log Out'),
+                           icon: const Icon(Icons.door_back_door_outlined, color: Colors.white,),
+                           label:  Text('Log Out'.tr, style: TextStyle(color: Colors.white),),
                          )
                        ]
                 ),
@@ -147,13 +229,13 @@ late String password;
   }
   Widget buildMenuItems(BuildContext context) => Container(
     padding: const EdgeInsets.fromLTRB(10, 3, 0, 5),
-    color: Colors.black12,
+    // color: Colors.black12,
     child: Column(
       children: [
         const SizedBox(height: 10 ),
         ListTile(
           leading: const Icon(Icons.home_outlined),
-          title: const Text('Home',
+          title:  Text('Home'.tr,
               style: TextStyle(fontSize: 17), ),
           onTap: (){
             Navigator.pop(context);
@@ -165,7 +247,7 @@ late String password;
         ),
         ListTile(
           leading: const Icon(Icons.bookmark_border),
-          title: const Text('Orders',
+          title:  Text('Orders'.tr,
             style: TextStyle(fontSize: 17),),
           onTap: (){
             // to close the navigation drawer before going to the orders page
@@ -179,7 +261,7 @@ late String password;
         ),
         ListTile(
           leading: const Icon(Icons.account_balance_wallet_outlined),
-          title: const Text('wallet',
+          title:  Text('wallet'.tr,
             style: TextStyle(fontSize: 17),),
           onTap: ()async{
             final user = Provider.of<UserFB?>(context, listen: false);
@@ -190,14 +272,14 @@ late String password;
                   return _showLockScreen(
               context,
               opaque: false,
-              cancelButton: const Text(
-                'Cancel',
+              cancelButton:  Text(
+                'Cancel'.tr,
                 style: TextStyle(fontSize: 16, color: Colors.white,),
                 semanticsLabel: 'Cancel',
               ), digits: [ '1', '2', '3', '4', '5', '6', '7', '8', '9', '0'],
             );}
               else {
-                  Text('Please check your connection');
+                  Text('Please check your connection'.tr);
                 }
               // return Text('Error');
 
@@ -209,7 +291,7 @@ late String password;
         ),
         ListTile(
           leading: const Icon(Icons.location_on_outlined),
-          title: const Text('Make an order',
+          title:  Text('Make an order'.tr,
             style: TextStyle(fontSize: 17),),
           onTap: (){
             Navigator.pop(context);
@@ -222,7 +304,7 @@ late String password;
         const Divider(color: Colors.black38),
         ListTile(
           leading: const Icon(Icons.contact_support),
-          title: const Text('Contact us',
+          title:  Text('Contact us'.tr,
             style: TextStyle(fontSize: 17),),
           onTap: () {
             Navigator.pop(context);
@@ -234,7 +316,7 @@ late String password;
         ),
         ListTile(
           leading: const Icon(Icons.info),
-          title: const Text('About us',
+          title:  Text('About us'.tr,
             style: TextStyle(fontSize: 17),),
           onTap: () {
             Navigator.pop(context);
@@ -244,18 +326,6 @@ late String password;
             ));
           }
         ),
-        ListTile(
-          leading: const Icon(Icons.settings),
-          title: const Text('Settings',
-            style: TextStyle(fontSize: 17),),
-          onTap: (){
-            Navigator.pop(context);
-
-            Navigator.of(context).pushReplacement(MaterialPageRoute(
-                builder: (context) => settings(),
-            ));
-          }
-        )
       ],
     ),
   );
@@ -273,8 +343,8 @@ late String password;
           opaque: opaque,
           pageBuilder: (context, animation, secondaryAnimation) =>
               PasscodeScreen(
-                title: const Text(
-                  'Enter Passcode',
+                title:  Text(
+                  'Enter Passcode'.tr,
                   textAlign: TextAlign.center,
                   style: const TextStyle(color: Colors.white, fontSize: 28),
                 ),
@@ -282,8 +352,8 @@ late String password;
                 keyboardUIConfig: keyboardUIConfig,
                 passwordEnteredCallback: _passcodeEntered,
                 cancelButton: cancelButton,
-                deleteButton: const Text(
-                  'Delete',
+                deleteButton:  Text(
+                  'Delete'.tr,
                   style: TextStyle(fontSize: 16, color: Colors.white),
                   semanticsLabel: 'Delete',
                 ),
@@ -325,8 +395,8 @@ late String password;
           margin: const EdgeInsets.only(bottom: 10.0, top: 20.0),
           child: TextButton(
             onPressed: _resetApplicationPassword,
-            child: const Text(
-              "Reset passcode",
+            child:  Text(
+              "Reset passcode".tr,
               textAlign: TextAlign.center,
               style: TextStyle(fontSize: 16,
                   color: Colors.white,
@@ -353,19 +423,19 @@ late String password;
       builder: (BuildContext context) {
         return AlertDialog(
           backgroundColor: Colors.teal[50],
-          title: const Text(
-            "Reset passcode",
+          title:  Text(
+            "Reset passcode".tr,
             style: TextStyle(color: Colors.black87),
           ),
-          content: const Text(
-            "Passcode reset is a non-secure operation!\nAre you sure want to reset?",
+          content:  Text(
+            "Passcode reset is a non-secure operation!\nAre you sure want to reset?".tr,
             style: TextStyle(color: Colors.black87),
           ),
           actions: <Widget>[
             // usually buttons at the bottom of the dialog
             TextButton(
-              child: const Text(
-                "Cancel",
+              child:  Text(
+                "Cancel".tr,
                 style: TextStyle(fontSize: 18),
               ),
               onPressed: () {
@@ -373,8 +443,8 @@ late String password;
               },
             ),
             TextButton(
-              child: const Text(
-                "I proceed",
+              child:  Text(
+                "I proceed".tr,
                 style: TextStyle(fontSize: 18),
               ),
               onPressed: onReset,
@@ -392,7 +462,7 @@ late String password;
     {
       String error= '';
       return AlertDialog(
-        title: Text('Change Password'),
+        title: Text('Change Password'.tr),
         content: Container(
           child: Form(
             key: _formkey,
@@ -404,8 +474,8 @@ late String password;
                     inputFormatters: <TextInputFormatter>[
                       FilteringTextInputFormatter.digitsOnly
                     ],
-                    decoration: const InputDecoration(
-                      labelText: 'Enter the current Passcode',
+                    decoration:  InputDecoration(
+                      labelText: 'Enter the current Passcode'.tr,
                     ),
                   validator: (val) => val!.isEmpty ? 'The current passcode is incorrect': val.length != 6 ?
                   'The passcode can only be six digits long ' : null,
@@ -419,8 +489,8 @@ late String password;
                     inputFormatters: <TextInputFormatter>[
                       FilteringTextInputFormatter.digitsOnly
                     ],
-                    decoration: const InputDecoration(
-                      labelText: 'Enter a new Passcode',
+                    decoration:  InputDecoration(
+                      labelText: 'Enter a new Passcode'.tr,
                     ),
                   validator: (val) => val!.isEmpty ? 'The current passcode is incorrect': val.length != 6 ?
                   'The passcode can only be six digits long ' : null,
@@ -441,7 +511,7 @@ late String password;
                   print('huhuhuhuhuuh on that bs');
                   setState(()=> error = 'Sorry, the password you entered is incorrect, enter the correct password');
                 }
-                }, child: Text("Confirm")
+                }, child: Text("Confirm".tr)
               ),
               Card(
                 elevation: 0,

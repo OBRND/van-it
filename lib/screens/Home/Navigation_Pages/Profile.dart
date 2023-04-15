@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:van_lines/models/User.dart';
@@ -9,7 +10,9 @@ import 'package:van_lines/services/Auth.dart';
 import 'package:van_lines/services/Database.dart';
 import 'package:provider/provider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:van_lines/services/Storage.dart';
 import 'package:van_lines/shared/decorations.dart';
+import 'package:get/get.dart';
 
 class Profile extends StatefulWidget {
   @override
@@ -65,91 +68,114 @@ class _ProfileState extends State<Profile> {
 
     return Scaffold(
       drawer: NavigationDrawer(),
+      extendBodyBehindAppBar: true,
       appBar: AppBar(
-        title: Text('Profile'),
-        backgroundColor: Colors.blue,
+        title: Text('Profile'.tr),
+        backgroundColor: Colors.transparent,
+        elevation: 0,
       ),
       body: Container(
         decoration: const BoxDecoration(
             gradient: LinearGradient(
-                colors:[ Color(0xFF1173A8),
-                  Color(0xff4d39a1)])
+              begin: Alignment.topCenter,
+                colors:[
+                  Color(0xFF1280B9),
+                  Color(0xffeeeaee),
+                  Color(0xffeeeaee),
+                  Color(0xffeeeaee),
+                ])
         ),
           child: Form(
             key: _formkey,
-            child: Column( children: [
-              CircleAvatar(
-                radius: 50,
-                backgroundImage: FileImage(image),
-              ),
-                ElevatedButton(onPressed: chooseImage, child: Icon(Icons.edit)),
-                SizedBox(height: 30),
-                Text('Your profile info',
-                  style: TextStyle(fontSize: 20, color: Colors.black),),
-              SizedBox(height: 10),
-                TextFormField(
-                  decoration: textinputdecoration.copyWith(hintText: first),
-                  validator: (val) => val!.length < 4 ? 'Enter a valid first name' : null,
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                // padding: EdgeInsets.all(10),
+                children: [
+                SizedBox(height: MediaQuery.of(context).size.height *.15,),
+                CircleAvatar(
+                  radius: 50,
+                  foregroundImage: FileImage(image),
+                ),
+                  TextButton(onPressed: chooseImage,
+                      child: Icon(Icons.edit, color: Colors.black,)),
+                  SizedBox(height: 30),
+                  Text('Your profile info'.tr,
+                    style: TextStyle(fontSize: 20, color: Colors.black),),
+                SizedBox(height: 10),
+                  TextFormField(
+                    decoration: textinputdecoration.copyWith(hintText: first),
+                    validator: (val) => val!.length < 4 ? 'Enter a valid first name'.tr : null,
+                    // obscureText: true,
+                    onChanged: (val){
+                      setState(() => first = val);
+                    }
+                ),
+                  SizedBox(height: 4,),
+                  TextFormField(
+                  decoration: textinputdecoration.copyWith(hintText: last),
+                  validator: (val) => val!.length <4 ? 'Enter a valid last name'.tr : null,
                   // obscureText: true,
                   onChanged: (val){
-                    setState(() => first = val);
+                    setState(() => last = val);
                   }
               ),
-                TextFormField(
-                decoration: textinputdecoration.copyWith(hintText: last),
-                validator: (val) => val!.length <4 ? 'Enter a valid last name' : null,
-                // obscureText: true,
-                onChanged: (val){
-                  setState(() => last = val);
-                }
-            ),
-                TextFormField(
-                  decoration: textinputdecoration.copyWith(hintText: phone),
-                    // obscureText: true,
-                  onChanged: (val){
-                   if (isphonevalid (val)) {
-                     setState(() => phone = val);
-                   }
-                  },
-                    validator: (val) => isphonevalid(val!) ? null: 'Enter a valid phone number',
+                  SizedBox(height: 4,),
+                  TextFormField(
+                    decoration: textinputdecoration.copyWith(hintText: phone),
+                      // obscureText: true,
+                    onChanged: (val){
+                     if (isphonevalid (val)) {
+                       setState(() => phone = val);
+                     }
+                    },
+                      validator: (val) => isphonevalid(val!) ? null: 'Enter a valid phone number'.tr,
 
           ),
-               TextButton(
-                 onPressed: () async{
-                   if(_formkey.currentState!.validate()){
-                     //   setState(() => loading =
-                     dynamic result = await DatabaseService(uid: user.uid).updateUserData(first,last, phone);
-                     // dynamic result = await _auth.registerWEP(email, password,First_name, Last_name, Phone_number);
-                     if(result == null){
-                       setState((){error ='Success!';
-                       });
-                     } else{
-                       setState((){  error ='Sorry, an error occured, try again later';
-                       });
+                 TextButton(
+                   onPressed: () async{
+                     if(_formkey.currentState!.validate()){
+                       //   setState(() => loading =
+                       dynamic result = await DatabaseService(uid: user.uid).updateUserData(first,last, phone);
+                       // dynamic result = await _auth.registerWEP(email, password,First_name, Last_name, Phone_number);
+                       if(result == null){
+                         setState((){error ='Success!'.tr;
+                         });
+                       } else{
+                         setState((){  error ='Sorry, an error occured, try again later';
+                         });
+                       }
                      }
-                   }
-                  // print(await databaseservice.getuserInfo());
-                  // List Profile = await databaseservice.getuserInfo();
-                  //  setState((){
-                  //    first = Profile[0];
-                  //    last = Profile[1];
-                  //    phone = Profile[2];
-                  //  });
-                 },
-                   child: Text("Edit data")
-               ),
-              Text(error,
-                style: TextStyle(color: Colors.red),
-              )
-            ],
+                    // print(await databaseservice.getuserInfo());
+                    // List Profile = await databaseservice.getuserInfo();
+                    //  setState((){
+                    //    first = Profile[0];
+                    //    last = Profile[1];
+                    //    phone = Profile[2];
+                    //  });
+                   },
+                     child: Text("Edit data".tr)
+                 ),
+                Text(error,
+                  style: TextStyle(color: Colors.red),
+                )
+              ],
     ),
+            ),
           ),
     )
     );
   }
   chooseImage() async{
-    final getImage = await ImagePicker().getImage(source: ImageSource.gallery);
+    // final FirebaseStorage storage = FirebaseStorage.instance;
+    final user = Provider.of<UserFB?>(context, listen: false);
+    // Auth_service auth_service =Auth_service();
+    final uid = user!.uid;
+    final getImage = await ImagePicker().pickImage(source: ImageSource.gallery);
     final pickedImageFile = File(getImage!.path);
+    print(pickedImageFile);
+    final Storage storage = Storage();
+    await storage.uploadfile(pickedImageFile, uid);
     setState(() {
       image = pickedImageFile;
     });

@@ -95,7 +95,7 @@ class _Van_cardState extends State<Van_card> {
             Padding(
               padding: const EdgeInsets.all(10.0),
               child: TextFormField(
-                maxLength: 4,
+                maxLength: 6,
                 decoration: const InputDecoration(
                   hintText: 'The PIN',
                   ),
@@ -103,7 +103,7 @@ class _Van_cardState extends State<Van_card> {
                 inputFormatters: <TextInputFormatter>[
                   FilteringTextInputFormatter.digitsOnly
                 ],
-                  validator: (val) => val!.length <4 ? 'the pin is a 4 digit number' : null,
+                  validator: (val) => val!.length <6 ? 'the pin is a 6 digit number' : null,
                   onChanged:(val){
                     setState(() => pin = int.parse(val));
 
@@ -178,13 +178,13 @@ class _Van_cardState extends State<Van_card> {
               _buildlogo(),
               Padding(
                 padding: const EdgeInsets.only(top: 10),
-                child: Text('$cardnumber',style: TextStyle(color: Colors.white, fontSize: 21,fontFamily: 'CourierPrime'),),
+                child: Text(' ',style: TextStyle(color: Colors.white, fontSize: 21,fontFamily: 'CourierPrime'),),
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text('XXXXXX XXXXXX'),
-                  Text(expdate)
+                  Text('XXXXX XXXXX', style: TextStyle(color: Colors.white),),
+                  Text(expdate, style: TextStyle(color: Colors.white))
                 ],
               ),
             ],
@@ -196,7 +196,7 @@ class _Van_cardState extends State<Van_card> {
   Widget _buildlogo(){
     return Row(
       children: [
-        Image.asset("Assets/download.png",height: 60,width: 50,),
+        Image.asset("Assets/fast-delivery-modified.png",height: 60,width: 50,),
         // Image.asset("Assets/img1.jpg",height: 25,width: 20,),
 
       ],

@@ -1,7 +1,11 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:provider/provider.dart';
 import 'package:van_lines/main.dart';
+import 'package:van_lines/models/User.dart';
+import 'package:van_lines/screens/Home/Navigation_Pages/Contactus/customer_support.dart';
 import 'package:van_lines/screens/Home/Navigation_drawer.dart';
 import 'package:van_lines/services/map_services.dart';
 import 'package:van_lines/trial.dart';
@@ -21,12 +25,21 @@ class _Contact_usState extends State<Contact_us> {
 
   @override
   Widget build(BuildContext context) {
+    String label='Name';
+    String labe4='write your message here';
+    String labe2='Subject';
+    String labe3='your email';
+    String hint1='Write your name';
+    String hint2='Enter your email so we can reach you';
+    String hint3='write the Subject';
+    String hint4='What can we help you with';
+
     return Scaffold(
       backgroundColor: Colors.blueGrey,
       drawer: NavigationDrawer(),
       appBar: AppBar(
         elevation: 0,
-        title: Text('Contact Us'),
+        title: Text('Contact Us'.tr),
         backgroundColor: Colors.transparent,
       ),
       body: Padding(
@@ -34,11 +47,11 @@ class _Contact_usState extends State<Contact_us> {
         child: Wrap(
           children:[
            // Text('Name'),
-           TextFormField(decoration: const InputDecoration(
+           TextFormField(decoration: InputDecoration(
              filled: true,
              fillColor: Colors.white,
-             hintText: 'Write your name',
-             labelText: 'Name',
+             hintText: hint1.tr,
+             labelText: label.tr,
            ),
              onChanged:(val){
                setState(() => name = val);
@@ -46,21 +59,21 @@ class _Contact_usState extends State<Contact_us> {
 
           ),
             // Text('Subject'),
-            TextFormField(decoration: const InputDecoration(
+            TextFormField(decoration: InputDecoration(
               filled: true,
               fillColor: Colors.white,
-              hintText: 'Enter your email so we can reach you',
-              labelText: 'your email',
+              hintText: hint2.tr,
+              labelText: labe3.tr,
             ),
               onChanged:(val){
                 setState(() => email = val);
               },
             ),
-            TextFormField(decoration: const InputDecoration(
+            TextFormField(decoration: InputDecoration(
               filled: true,
               fillColor: Colors.white,
-              hintText: 'write the Subject',
-              labelText: 'Subject',
+              hintText: hint3.tr,
+              labelText: labe2.tr,
             ),
               onChanged:(val){
                 setState(() => subject = val);
@@ -69,11 +82,11 @@ class _Contact_usState extends State<Contact_us> {
             // Text('Message'),
             TextFormField(
               textAlign: TextAlign.justify,
-              decoration: const InputDecoration(
+              decoration: InputDecoration(
                 filled: true,
                 fillColor: Colors.white,
-                hintText: 'What can we help you with',
-                labelText: 'write your message here',
+                hintText: hint4.tr,
+                labelText: labe4.tr,
               ),
               onChanged:(val){
                 setState(() => message = val);
@@ -84,11 +97,26 @@ class _Contact_usState extends State<Contact_us> {
               child: ElevatedButton(onPressed: (){
                 sendEmail(name: name, email: email, subject: subject, message: message);
               },
-              child: Text('Send'),),
+              child: Text('Send'.tr),),
             )
           ]
         ),
-      )
+      ),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: (){
+          final user = Provider.of<UserFB?>(context, listen: false);
+          Navigator.of(context).push(MaterialPageRoute(
+              builder: (context) => Chat(chatID: user!.uid)));
+        },
+        label: Row(
+          children: [
+            Text('Contact support '),
+            Icon(
+              Icons.contact_support
+            ),
+          ],
+        ),
+      ),
 
     );
   }

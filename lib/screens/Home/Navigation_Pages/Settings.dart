@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:van_lines/screens/Home/Navigation_drawer.dart';
+import 'package:get/get.dart';
 
 class settings extends StatelessWidget {
   // const Settings({Key? key}) : super(key: key);
@@ -9,7 +10,7 @@ class settings extends StatelessWidget {
     return Scaffold(
       drawer: NavigationDrawer(),
       appBar: AppBar(
-        title: Text('Settings'),
+        title: Text('Settings'.tr),
         backgroundColor: Colors.blue,
       ),
 

@@ -1,6 +1,7 @@
 import 'package:expandable/expandable.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:van_lines/screens/Home/Navigation_Pages/Orders.dart';
 import 'package:van_lines/screens/Home/Navigation_Pages/Wallet.dart';
 
 import '../../../../../../models/User.dart';
@@ -19,7 +20,7 @@ class Pay_pickup extends StatefulWidget {
 
 class _Pay_pickupState extends State<Pay_pickup> {
   _Pay_pickupState({required this.pay, required this.order, required this.locations,required this.Pickup_date});
-  int pay;
+  List pay;
   DateTime Pickup_date;
   Locations locations;
   Payment_item order;
@@ -56,10 +57,12 @@ class _Pay_pickupState extends State<Pay_pickup> {
                         builder: (context) => Wallet()));
                   },
                     child: Text('Go to wallet to deposit', style: TextStyle(color: Colors.white),),),
-                  ElevatedButton(onPressed: checked ? null : () async{
+                  ElevatedButton(onPressed: !checked ? null : () async{
                     final user = Provider.of<UserFB?>(context, listen: false);
                     final uid = user!.uid;
-                    await DatabaseService(uid: user.uid).orders(order, locations, Pickup_date, pay, 'Unpaid');
+                    await DatabaseService(uid: user.uid).orders(order, locations, Pickup_date, pay[0], 'Unpaid');
+                    Navigator.of(context).pushReplacement(MaterialPageRoute(
+                        builder: (context) => Orders()));
                   },
                   child: Text('Finish', style: TextStyle(fontWeight: FontWeight.w800,fontSize: 16),),)
 

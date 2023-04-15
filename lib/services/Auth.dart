@@ -34,7 +34,10 @@ class Auth_service {
   }
 
     //sign in with email and password
-
+    Future forgotpass(email) async{
+    try{ await _auth.sendPasswordResetEmail(email: email);
+    }
+  catch(error){}}
     Future Signin_WEP(email, password) async {
       try {
         // await Firebase.initializeApp();

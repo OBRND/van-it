@@ -54,6 +54,16 @@ dependencies:
 #  local_auth: ^2.1.2
   passcode_screen: ^2.0.1
   font_awesome_flutter: ^10.2.1
+  firebase_storage: ^10.3.11
+  animated_type_ahead_searchbar: ^0.0.2
+  firebase_core_platform_interface: 4.5.1
+  intl: ^0.17.0
+  flutter_rating_bar: ^4.0.1
+  flat_icons_flutter: ^1.0.2
+  get: ^4.6.5
+  flutter_speed_dial: ^6.2.0
+  animated_snack_bar: ^0.3.0
+  lottie: ^1.4.2
 
 
 dev_dependencies:
