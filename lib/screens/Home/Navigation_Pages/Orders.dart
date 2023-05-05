@@ -10,7 +10,6 @@ import 'package:van_lines/screens/Home/Navigation_Pages/Orders_map/Qr_Scanner.da
 import 'package:van_lines/screens/Home/Navigation_Pages/Orders_map/Rating.dart';
 import 'package:van_lines/screens/Home/Navigation_Pages/Orders_map/Track_orders.dart';
 import 'package:van_lines/screens/Home/Navigation_drawer.dart';
-import 'package:van_lines/screens/home/Navigation_drawer.dart';
 import 'dart:developer';
 import '../../../models/User.dart';
 import '../../../services/Database.dart';
