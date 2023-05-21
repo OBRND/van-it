@@ -28,21 +28,6 @@ class _Company_detailsState extends State<Company_details> {
         child: Chip(
           avatar: CircleAvatar(child: Text(actor.initials)),
           label: Text(actor.name),
-          // onDeleted: () {
-          //   setState((){
-          //     cast.removeWhere((Actor entry) {
-          //
-          //       return entry.name == actor.name;
-          //     }
-          //     );
-          //   });
-          //   for (int i=0 ; i<6; i++)
-          //     print(cast[i].name);
-          //   for (int i=0 ; i<6; i++)
-          //     setState(() => (cast[i].name));
-          //   setState(() => Items=[ '','','','','','','']);
-          //   items();
-          // },
         ),
       );
     });

@@ -89,6 +89,8 @@ class _Qr_ScannerState extends State<Qr_Scanner> {
       setState(() {
         this.Qrcode = Qrcode;
       });
+      controller.stopCamera(); // Stop the camera from scanning further
+
     });
   }
 

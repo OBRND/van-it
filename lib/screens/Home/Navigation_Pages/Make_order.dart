@@ -94,18 +94,17 @@ class _Make_orderState extends State<Make_order> {
         time = '$Route_time';
       });
     }
-
     return Scaffold(
-
       extendBodyBehindAppBar: true,
       // extendBody: true,
       // drawer: NavigationDrawer(),
       appBar: AppBar(
         elevation: 0,
         backgroundColor: Colors.transparent,
+        iconTheme: IconThemeData(color: Colors.black54),
         title: Text('Set Address and Pickup time'.tr, style: TextStyle(color: Colors.black54)),
         bottom: PreferredSize(
-          preferredSize: const Size.fromHeight(80.0),
+          preferredSize: const Size.fromHeight(50.0),
           child: Container(
             width: MediaQuery.of(context).size.width,
             child:
@@ -131,53 +130,80 @@ class _Make_orderState extends State<Make_order> {
             FractionallySizedBox(
               widthFactor: 0.90,
               child: Center(
-                child:  Container(
-                  height: 75,
-                  alignment: Alignment.center,
-                  child: TypeAheadField(
-                    textFieldConfiguration: TextFieldConfiguration(
-                      autofocus: false,
-                      maxLines: 1,
-                      controller: textController,
-                      decoration: InputDecoration(
-                          contentPadding: EdgeInsets.all(3),
-                          labelText: "Search by location".tr,
-                          labelStyle: TextStyle(
-                              color: Colors.black
-                          ),
-                          focusedBorder:  OutlineInputBorder(
-                              borderSide: BorderSide(
-                                width: 1.3,
-                                color: Colors.black,
-                              )
-                          ),
-                          border: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                width: 0.8,
-                              )
+                child:  SingleChildScrollView(
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(30),
+                      color: Colors.grey.withOpacity(.9),
+                    ),
+                    // color: Colors.black12.withOpacity(.5),
+                    // height: 75,
+                    alignment: Alignment.center,
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 5),
+                      child: TypeAheadField(
+                        textFieldConfiguration: TextFieldConfiguration(
+
+                          textAlign: TextAlign.justify,
+                          style:  TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.w400),
+                          autofocus: false,
+                          maxLines: 1,
+                          controller: textController,
+                          decoration: InputDecoration(
+                              contentPadding: EdgeInsets.all(10),
+                              labelText: "   Search by location".tr,
+                              labelStyle: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 15
+                              ),
+                              focusedBorder:  OutlineInputBorder(
+                                borderRadius : BorderRadius.all(Radius.circular(30.0)),
+                                borderSide: BorderSide(
+                                    width: 1.3,
+                                    color: Colors.transparent,
+                                  )
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                          borderRadius : BorderRadius.all(Radius.circular(30.0)),
+                          borderSide: BorderSide(
+                            width: 1.3,
+                            color: Colors.transparent,
                           )
                       ),
+                              border: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                    width: 0.8,
+                                    color: Colors.transparent
+                                  ),
+                                  borderRadius : BorderRadius.all(Radius.circular(30.0))
+                              )
+                          ),
+                        ),
+                          noItemsFoundBuilder: (context) {
+                          return Padding(
+                            padding: const EdgeInsets.all(10.0),
+                            child: Text('Sorry, no luck'.tr, style:  TextStyle(color: Colors.redAccent, fontSize: 20, fontWeight: FontWeight.w300),),
+                          );},
+                         errorBuilder: (context, error) {
+                          return SizedBox();},
+                          suggestionsCallback: (pattern) async {
+                          if (pattern.isNotEmpty) return await addressSuggestion(pattern);
+                          return Future.value();
+                        },
+                        suggestionsBoxDecoration: SuggestionsBoxDecoration(),
+                        itemBuilder: (context, suggestion) {
+                          return ListTile(
+                            leading: Icon(Icons.location_on, size: 40),
+                            title: Text((suggestion as SearchInfo).address!.name!),
+                            subtitle: Text((suggestion).address!.country!),
+                          );
+                        },
+                        onSuggestionSelected: (suggestion) async {
+                          await controller
+                              .goToLocation((suggestion as SearchInfo?)!.point!);
+                        },
+                      ),
                     ),
-                      noItemsFoundBuilder: (context) {
-                      return Text('Sorry, no luck'.tr);},
-                     errorBuilder: (context, error) {
-                      return Text('     ');},
-                      suggestionsCallback: (pattern) async {
-                      if (pattern.isNotEmpty) return await addressSuggestion(pattern);
-                      return Future.value();
-                    },
-                    suggestionsBoxDecoration: SuggestionsBoxDecoration(),
-                    itemBuilder: (context, suggestion) {
-                      return ListTile(
-                        leading: Icon(Icons.location_on),
-                        title: Text((suggestion as SearchInfo).address!.name!),
-                        subtitle: Text((suggestion).address!.country!),
-                      );
-                    },
-                    onSuggestionSelected: (suggestion) async {
-                      await controller
-                          .goToLocation((suggestion as SearchInfo?)!.point!);
-                    },
                   ),
                 ),
               ),
@@ -205,9 +231,9 @@ class _Make_orderState extends State<Make_order> {
                      userLocationMarker: UserLocationMaker(
                        personMarker: MarkerIcon(
                          icon: Icon(
-                           Icons.location_history,
-                           color: Colors.red,
-                           size: 48,
+                           Icons.location_pin,
+                           color: Colors.blueAccent,
+                           size: 100,
                          ),),
                        directionArrowMarker: MarkerIcon(
                          icon: Icon(
@@ -227,9 +253,9 @@ class _Make_orderState extends State<Make_order> {
                      markerOption: MarkerOption(
                          defaultMarker: MarkerIcon(
                            icon: Icon(
-                             Icons.location_on,
+                             Icons.location_pin,
                              color: Colors.red,
-                             size: 56,
+                             size: 100,
                            ),
                          )
                      ),
@@ -305,7 +331,7 @@ class _Make_orderState extends State<Make_order> {
                 children: [
                   FloatingActionButton.extended(
                     label: Text( dateIsSet == true ? '$dateDisplay' : 'Set the Date of pick up'.tr,
-                    style: TextStyle(color: dateIsSet == true ? Colors.black : Colors.white),),
+                    style: TextStyle(color: dateIsSet == true ? Colors.white : Colors.white),),
                     backgroundColor: Colors.blueGrey,
                     onPressed: pickDateTime,
                     // print(choice);          },
@@ -350,53 +376,55 @@ class _Make_orderState extends State<Make_order> {
         expandableContent: Container(
           // height: MediaQuery.of(context).size.height*.25,
           color: Colors.transparent,
-          child: Visibility(
-            visible: isvisible,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                _buildPlayerModelList(),
-                // _buildPlayerModelList(Exptext1, route1, 1),
-                // _buildPlayerModelList(Exptext2, route2, 2),
-                ElevatedButton(onPressed: () async {
-                  key.currentState?.contract();
-                  print(marker);
-                  Locations loc = Locations(start: custom_picked == null ? services().user_position :
-                  [custom_picked!.latitude, custom_picked!.longitude], destination: marker);
-                  print(services().user_position);
-                  List Choices = Total_choices;
-                  print(Choices);
-                  Payment_item items = Payment_item(
-                      Service_type: type,
-                      Package: Choices[0],
-                      Items: Items,
-                      has_elevator_pickup: Choices[3],
-                      has_elevator_destination: Choices[5],
-                      Floor_pickup: int.parse(Choices[2]),
-                      Floor_destination: int.parse(Choices[4]),
-                      Distance: Route_distance as double);
-               List pay = await Payment(order: items).Calculate();
-                  // await databaseservice.orders(services().user_position, marker, Choices, dateTime,Items );
-                  setState(() => isvisible = !isvisible);
-                  Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => Payment_system(pay: pay, order: items, locations: loc,Pickup_date: dateTime)));
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.green,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(15))
-                    )
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text('Continue'.tr),
-                      Icon(Icons.double_arrow_outlined),
-                    ],
-                  ),
-                  // color: Colors.green,
-                )
-              ],
+          child: Expanded(
+            child: Visibility(
+              visible: isvisible,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  _buildPlayerModelList(),
+                  // _buildPlayerModelList(Exptext1, route1, 1),
+                  // _buildPlayerModelList(Exptext2, route2, 2),
+                  ElevatedButton(onPressed: () async {
+                    key.currentState?.contract();
+                    print(marker);
+                    Locations loc = Locations(start: custom_picked == null ? services().user_position :
+                    [custom_picked!.latitude, custom_picked!.longitude], destination: marker);
+                    print(services().user_position);
+                    List Choices = Total_choices;
+                    print(Choices);
+                    Payment_item items = Payment_item(
+                        Service_type: type,
+                        Package: Choices[0],
+                        Items: Items,
+                        has_elevator_pickup: Choices[3],
+                        has_elevator_destination: Choices[5],
+                        Floor_pickup: int.parse(Choices[2]),
+                        Floor_destination: int.parse(Choices[4]),
+                        Distance: Route_distance as double);
+                 List pay = await Payment(order: items).Calculate();
+                    // await databaseservice.orders(services().user_position, marker, Choices, dateTime,Items );
+                    setState(() => isvisible = !isvisible);
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => Payment_system(pay: pay, order: items, locations: loc,Pickup_date: dateTime)));
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.green,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(15))
+                      )
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text('Continue'.tr),
+                        Icon(Icons.double_arrow_outlined),
+                      ],
+                    ),
+                    // color: Colors.green,
+                  )
+                ],
+              ),
             ),
           ),
     ),

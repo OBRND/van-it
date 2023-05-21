@@ -105,7 +105,7 @@ class _HomeState extends State<Home> {
         borderRadius: BorderRadius.circular(10.0),
         side: BorderSide(color: Colors.black),),
       // elevation: 0,
-      color: Colors.blue[200],
+      color: Colors.white70,
       child: Column(
         children: [
           Stack(
@@ -234,18 +234,39 @@ class _HomeState extends State<Home> {
                   child: Padding(
                     padding: const EdgeInsets.all(10.0),
                     child: ElevatedButton(
-                        style: ButtonStyle(
-                            shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                                RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(35.0),
-                                  side: BorderSide(color: Colors.white54),)),
-                            backgroundColor: MaterialStateColor.resolveWith((states) => Colors.blue.shade400)),
-                        onPressed: (){
-                          Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) => Home_details()));
-                        },
-                        child: Text('Home Moving'.tr,
-                            style: TextStyle(fontSize: 20, color: Colors.black, fontWeight: FontWeight.w700))),
+                      style: ButtonStyle(
+                        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                          RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(50.0),
+                            side: BorderSide(color: Colors.white54),
+                          ),
+                        ),
+                        backgroundColor:
+                        MaterialStateColor.resolveWith((states) => Colors.blueAccent),
+                      ),
+                      onPressed: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(builder: (context) => Home_details()),
+                        );
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.all(15.0),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(Icons.home_outlined, size: 80, color: Colors.white),
+                            Text(
+                              'Home Move'.tr,
+                              style: TextStyle(
+                                fontSize:18,
+                                color: Colors.white,
+                                fontWeight: FontWeight.w400,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
                   ),
                 ),
               ),
@@ -260,14 +281,23 @@ class _HomeState extends State<Home> {
                         style: ButtonStyle(
                             shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                                 RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(35.0),
+                                  borderRadius: BorderRadius.circular(50.0),
                                   side: BorderSide(color: Colors.white54),)),
-                            backgroundColor: MaterialStateColor.resolveWith((states) => Colors.blue.shade400)),
+                            backgroundColor: MaterialStateColor.resolveWith((states) => Colors.blueAccent)),
                         onPressed: (){
                           Navigator.of(context).push(MaterialPageRoute(
                               builder: (context) => Furniture_details()));
                         },
-                        child: Text('Furniture Move'.tr,  style: TextStyle(fontSize: 20,fontWeight: FontWeight.w700, color: Colors.black))),
+                        child: Padding(
+                          padding: const EdgeInsets.all(15.0),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(Icons.chair_outlined, size: 80, color: Colors.white),
+                              Text('Furniture Move'.tr,  style: TextStyle(fontSize: 18, color: Colors.white, fontWeight: FontWeight.w400)),
+                            ],
+                          ),
+                        )),
                   ),
                 ),
               ),
