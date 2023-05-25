@@ -63,11 +63,10 @@ class _Service_formState extends State<Service_form> {
                           shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                             RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(50.0),
-                              side: BorderSide(color: Colors.white54),
+                              side: BorderSide(color: Colors.black12),
                             ),
                           ),
-                          backgroundColor:
-                          MaterialStateColor.resolveWith((states) => Colors.blueAccent),
+                          backgroundColor: MaterialStateColor.resolveWith((states) => Colors.blueAccent),
                         ),
                         onPressed: () {
                           Navigator.of(context).push(
@@ -81,7 +80,14 @@ class _Service_formState extends State<Service_form> {
                             children: [
                               Icon(Icons.home_rounded, size: 80, color: Colors.white),
                               Text(
-                                'Home Move'.tr,
+                                'Home'.tr,
+                                style: TextStyle(
+                                  fontSize:18,
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w400,
+                                ),
+                              ),Text(
+                                'Moving'.tr,
                                 style: TextStyle(
                                   fontSize:18,
                                   color: Colors.white,
@@ -107,7 +113,7 @@ class _Service_formState extends State<Service_form> {
                                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                                    RoundedRectangleBorder(
                                      borderRadius: BorderRadius.circular(50.0),
-                                     side: BorderSide(color: Colors.white54),)),
+                                     side: BorderSide(color: Colors.black12),)),
                                backgroundColor: MaterialStateColor.resolveWith((states) => Colors.blueAccent)),
                            onPressed: (){
                          Navigator.of(context).push(MaterialPageRoute(
@@ -119,7 +125,8 @@ class _Service_formState extends State<Service_form> {
                                mainAxisAlignment: MainAxisAlignment.center,
                                children: [
                                  Icon(Icons.chair_outlined, size: 80, color: Colors.white),
-                                 Text('Furniture Move'.tr,  style: TextStyle(fontSize: 18, color: Colors.white, fontWeight: FontWeight.w400)),
+                                 Text('Furniture'.tr,  style: TextStyle(fontSize: 18, color: Colors.white, fontWeight: FontWeight.w400)),
+                                 Text('Moving'.tr,  style: TextStyle(fontSize: 18, color: Colors.white, fontWeight: FontWeight.w400)),
                                ],
                              ),
                            )),
@@ -141,7 +148,7 @@ class _Service_formState extends State<Service_form> {
                               shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                                   RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(50.0),
-                                    side: BorderSide(color: Colors.white54),)),
+                                    side: BorderSide(color: Colors.black12),)),
                               backgroundColor: MaterialStateColor.resolveWith((states) => Colors.blueAccent)),
                           child: Padding(
                             padding: const EdgeInsets.all(10.0),
@@ -149,7 +156,8 @@ class _Service_formState extends State<Service_form> {
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Icon(Icons.business_rounded, size: 80, color: Colors.white, weight: 2 ),
-                                Text('Company Move'.tr,  style: TextStyle(fontSize: 18, color: Colors.white, fontWeight: FontWeight.w400)),
+                                Text('Company'.tr,  style: TextStyle(fontSize: 18, color: Colors.white, fontWeight: FontWeight.w400)),
+                                Text('Moving'.tr,  style: TextStyle(fontSize: 18, color: Colors.white, fontWeight: FontWeight.w400)),
                               ],
                             ),
                           )),
@@ -168,7 +176,7 @@ class _Service_formState extends State<Service_form> {
                               shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                                   RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(50.0),
-                                    side: BorderSide(color: Colors.white54),)),
+                                    side: BorderSide(color: Colors.black12),)),
                               backgroundColor: MaterialStateColor.resolveWith((states) => Colors.blueAccent)),
                           onPressed: (){
                         Navigator.of(context).push(MaterialPageRoute(
@@ -180,7 +188,8 @@ class _Service_formState extends State<Service_form> {
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Icon(Icons.warning_amber_rounded, size: 80, color: Colors.white),
-                                Text('Special Move'.tr,  style: TextStyle(fontSize: 18, color: Colors.white, fontWeight: FontWeight.w400)),
+                                Text('Special'.tr,  style: TextStyle(fontSize: 18, color: Colors.white, fontWeight: FontWeight.w400)),
+                                Text('Moving'.tr,  style: TextStyle(fontSize: 18, color: Colors.white, fontWeight: FontWeight.w400)),
                               ],
                             ),
                           )),

@@ -78,8 +78,9 @@ class _HomeState extends State<Home> {
             height: MediaQuery.of(context).size.height,
             decoration: const BoxDecoration(
           gradient: LinearGradient(
+            begin: Alignment.topCenter,
           colors:[ Color(0xFF3588B6),
-            Color(0xFF1173A8)])
+            Color(0xFFE1E2E7)])
           ),
           child: Column(
             mainAxisSize: MainAxisSize.min,
@@ -105,7 +106,7 @@ class _HomeState extends State<Home> {
         borderRadius: BorderRadius.circular(10.0),
         side: BorderSide(color: Colors.black),),
       // elevation: 0,
-      color: Colors.white70,
+      color: Colors.white70.withOpacity(.5),
       child: Column(
         children: [
           Stack(
@@ -254,9 +255,17 @@ class _HomeState extends State<Home> {
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Icon(Icons.home_outlined, size: 80, color: Colors.white),
+                            Icon(Icons.home_rounded, size: 80, color: Colors.white),
                             Text(
-                              'Home Move'.tr,
+                              'Home'.tr,
+                              style: TextStyle(
+                                fontSize:18,
+                                color: Colors.white,
+                                fontWeight: FontWeight.w400,
+                              ),
+                            ),
+                            Text(
+                              'Moving'.tr,
                               style: TextStyle(
                                 fontSize:18,
                                 color: Colors.white,
@@ -292,9 +301,11 @@ class _HomeState extends State<Home> {
                           padding: const EdgeInsets.all(15.0),
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               Icon(Icons.chair_outlined, size: 80, color: Colors.white),
-                              Text('Furniture Move'.tr,  style: TextStyle(fontSize: 18, color: Colors.white, fontWeight: FontWeight.w400)),
+                              Text('Furniture'.tr,  style: TextStyle(fontSize: 18, color: Colors.white, fontWeight: FontWeight.w400)),
+                              Text('Moving'.tr,  style: TextStyle(fontSize: 18, color: Colors.white, fontWeight: FontWeight.w400)),
                             ],
                           ),
                         )),

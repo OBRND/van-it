@@ -70,8 +70,9 @@ Future gethistory() async{
       drawer: NavigationDrawerModel(),
       appBar: AppBar(
         elevation: 0,
-        title: Text('My Orders'.tr),
-        backgroundColor: Color(0xff2c324d),
+        title: Text('My Orders'.tr, style: TextStyle(color: Colors.black54),),
+        backgroundColor: Colors.white,
+        iconTheme: IconThemeData(color: Colors.black54),
       ),
       body: FutureBuilder(
         future: getorder(),
@@ -80,169 +81,198 @@ Future gethistory() async{
             case ConnectionState.waiting:
               return Center(child: CircularProgressIndicator());
             // case (ConnectionState.done) :
-            default:  return Stack(
-                 children: [
-                SingleChildScrollView(
-                  child: Container(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        SizedBox(
-                          height: MediaQuery.of(context).size.height * .105,
-                        ),
-                        Text('Current Order'.tr,
-                            style: TextStyle(
-                                fontWeight: FontWeight.w500,
-                                color: Colors.black54,
-                                fontSize: 20)),
-                        snap.Order_status == 'Finished' ?
-                        _build_finished(context, snap.Payment_status, snap.Payment) :
-                        _build_current(snap),
-                        SizedBox(height: 15),
-                        Text('Order history'.tr,
-                            style: TextStyle(
-                                fontWeight: FontWeight.w500,
-                                color: Colors.black54,
-                                fontSize: 20)),
-                        Container(
-                            height: MediaQuery.of(context).size.height *.45,
-                            child: _build_history())
-                      ],
+            default: return SingleChildScrollView(
+              child: Container(
+                height: MediaQuery.of(context).size.height,
+                child: Column(
+                  mainAxisSize: MainAxisSize.max,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(25, 20, 0, 0),
+                      child: Text('Current Order'.tr,
+                          style: TextStyle(fontWeight: FontWeight.w500, color: Colors.black54, fontSize: 18)),
                     ),
-                  ),
-                ),
-                Container(
-                  height: MediaQuery.of(context).size.height * .1,
-                  decoration: BoxDecoration(
-                    color: Color(0xff2c324d),
-                    borderRadius: BorderRadius.only(
-                        bottomRight: Radius.circular(5),
-                        bottomLeft: Radius.circular(5)),
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      ElevatedButton(
-                        // shape: ShapeBorder.lerp( 5),
-                        // color: Color(0xffe33410),
-                        onPressed: snap.Order_status == '-' || snap.Order_status == 'pending' || snap.Order_status == 'Finished' ? null :
-                            () async {
-                                Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) => Track_orders(),
-                                ));
-                              },
-                        child: Text(
-                          "Track progress".tr,
-                          style: TextStyle(
-                              fontSize: 17, fontWeight: FontWeight.w400),
-                        ),
-                      ),
-                      ElevatedButton(
-                        onPressed: snap.Order_status == 'pending'
-                             ? () async {
-                          showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return AlertDialog(
-                                backgroundColor: Colors.white70,
-                                title:  Text("Confirm cancellation".tr,
-                                    style:TextStyle(
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 20,)
-                                ),
-                                content: Text("Confirm if you want to cancel this order".tr),
-                                actions: [
-                                  ElevatedButton(
-                                    onPressed: () async {
-                                      final user = Provider.of<UserFB?>(context,  listen: false);
-                                      await DatabaseService(uid: user!.uid).cancelorder('0');
-                                      setState(() {
-                                      });
-                                      Navigator.pop(context);
-                                    },
-                                    child: Text(
-                                      "Confirm".tr,
-                                      style: TextStyle(
-                                          fontSize: 17, fontWeight: FontWeight.w400),
-                                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 15, right: 15),
+                      child: Card(
+                        color: Colors.white70.withOpacity(.7),
+                        child: Column(
+                          children: [
+                            SizedBox(height: 15,),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10)
+                                    )
                                   ),
-                                ],
-                              );;
-                            },
-                          );
-                        } : snap.Order_status == 'On route to Pickup' ? () async {
-                              List<DropdownMenuItem<String>> menuItems = [
-                                DropdownMenuItem(child: Text("I changed my mind".tr),value: "0"),
-                                DropdownMenuItem(child: Text("Driver was late".tr),value: "1"),
-                                DropdownMenuItem(child: Text("The order was wrong".tr),value: "2"),
-                                DropdownMenuItem(child: Text("Some other reason".tr),value: "3"),
-                              ];
-                              showDialog(
-                                context: context,
-                                builder: (BuildContext context) {
-                                  return AlertDialog(
-                                    backgroundColor: Colors.white70,
-                                    title:  Text("Confirm cancellation".tr,
-                                        style:TextStyle(
-                                          color: Colors.black,
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 20,)
-                                    ),
-                                    content: StatefulBuilder(
-                                        builder:(BuildContext context, StateSetter setState) {
-                                          return Column(
-                                            mainAxisSize: MainAxisSize.min,
-                                            children: [
-                                              Column(
-                                                children: [
-                                                  Text("Enter a reason for canceling the order".tr),
-                                                  DropdownButton(
-                                                      iconSize: 25,
-                                                      value: selectedvalue,
-                                                      onChanged: (
-                                                          String? newValue) {
-                                                        setState(() =>
-                                                        selectedvalue =
-                                                        newValue!);
-                                                      },
-                                                      items: menuItems
-                                                  ),
-                                                ],
-                                              ),
-                                            ],
-                                          );
-                                        }),
-                                    actions: [
-                                      ElevatedButton(
-                                        onPressed: () async {
-                                          final user = Provider.of<UserFB?>(context,  listen: false);
-                                         await DatabaseService(uid: user!.uid).cancelorder(selectedvalue);
-                                         Navigator.pop(context);
-                                         setState(() {
-                                         });
-                                        },
-                                        child: Text(
-                                          "Confirm".tr,
-                                          style: TextStyle(
-                                              fontSize: 17, fontWeight: FontWeight.w400),
-                                        ),
+                                  // shape: ShapeBorder.lerp( 5),
+                                  // color: Color(0xffe33410),
+                                  onPressed: snap.Order_status == '-' || snap.Order_status == 'pending' || snap.Order_status == 'Finished' ? null :
+                                      () async {
+                                    Navigator.of(context).push(MaterialPageRoute(
+                                      builder: (context) => Track_orders(),
+                                    ));
+                                  },
+                                  child: Row(
+                                    children: [
+                                      Icon(Icons.location_on),
+                                      Text(
+                                        "Live tracking".tr,
+                                        style: TextStyle(
+                                            fontSize: 17, fontWeight: FontWeight.w400),
                                       ),
                                     ],
-                                  );;
-                                },
-                              );
-                              } : null,
-                        child: Text(
-                          "Cancel order".tr,
-                          style: TextStyle(
-                              fontSize: 17, fontWeight: FontWeight.w400),
+                                  ),
+                                ),
+                                ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: Colors.redAccent,
+                                      shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(10)
+                                      )
+                                  ),
+                                  onPressed: snap.Order_status == 'pending'
+                                      ? () async {
+                                    showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        return AlertDialog(
+                                          backgroundColor: Colors.white70,
+                                          title:  Text("Confirm cancellation".tr,
+                                              style:TextStyle(
+                                                color: Colors.black,
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 20,)
+                                          ),
+                                          content: Text("Confirm if you want to cancel this order".tr),
+                                          actions: [
+                                            ElevatedButton(
+                                              onPressed: () async {
+                                                final user = Provider.of<UserFB?>(context,  listen: false);
+                                                await DatabaseService(uid: user!.uid).cancelorder('0');
+                                                setState(() {
+                                                });
+                                                Navigator.pop(context);
+                                              },
+                                              child: Text(
+                                                "Confirm".tr,
+                                                style: TextStyle(
+                                                    fontSize: 17, fontWeight: FontWeight.w400),
+                                              ),
+                                            ),
+                                          ],
+                                        );;
+                                      },
+                                    );
+                                  } : snap.Order_status == 'On route to Pickup' ? () async {
+                                    List<DropdownMenuItem<String>> menuItems = [
+                                      DropdownMenuItem(child: Text("I changed my mind".tr),value: "0"),
+                                      DropdownMenuItem(child: Text("Driver was late".tr),value: "1"),
+                                      DropdownMenuItem(child: Text("The order was wrong".tr),value: "2"),
+                                      DropdownMenuItem(child: Text("Some other reason".tr),value: "3"),
+                                    ];
+                                    showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        return AlertDialog(
+                                          backgroundColor: Colors.white70,
+                                          title:  Text("Confirm cancellation".tr,
+                                              style:TextStyle(
+                                                color: Colors.black,
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 20,)
+                                          ),
+                                          content: StatefulBuilder(
+                                              builder:(BuildContext context, StateSetter setState) {
+                                                return Column(
+                                                  mainAxisSize: MainAxisSize.min,
+                                                  children: [
+                                                    Column(
+                                                      children: [
+                                                        Text("Enter a reason for canceling the order".tr),
+                                                        DropdownButton(
+                                                            iconSize: 25,
+                                                            value: selectedvalue,
+                                                            onChanged: (
+                                                                String? newValue) {
+                                                              setState(() =>
+                                                              selectedvalue =
+                                                              newValue!);
+                                                            },
+                                                            items: menuItems
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ],
+                                                );
+                                              }),
+                                          actions: [
+                                            ElevatedButton(
+                                              onPressed: () async {
+                                                final user = Provider.of<UserFB?>(context,  listen: false);
+                                                await DatabaseService(uid: user!.uid).cancelorder(selectedvalue);
+                                                Navigator.pop(context);
+                                                setState(() {
+                                                });
+                                              },
+                                              child: Text(
+                                                "Confirm".tr,
+                                                style: TextStyle(
+                                                    fontSize: 17, fontWeight: FontWeight.w400),
+                                              ),
+                                            ),
+                                          ],
+                                        );;
+                                      },
+                                    );
+                                  } : null,
+                                  child: Text(
+                                    "Cancel order".tr,
+                                    style: TextStyle(
+                                        fontSize: 17, fontWeight: FontWeight.w400),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            snap.Order_status == 'Finished' ?
+                            _build_finished(context, snap.Payment_status, snap.Payment) :
+                            _build_current(snap),
+                            SizedBox(height: 15,),
+                          ],
                         ),
                       ),
-                    ],
-                  ),
+                    ),
+
+                    SizedBox(height: 15),
+                    Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.only(
+                            topRight: Radius.circular(20),
+                            topLeft: Radius.circular(20)),
+                        color: Color(0xff2c324d).withOpacity(.6),
+                      ),
+                      height: MediaQuery.of(context).size.height * .7,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.all(20.0),
+                            child: Text('Order history'.tr,
+                                style: TextStyle(fontWeight: FontWeight.w500, color: Colors.white, fontSize: 20)),
+                          ),
+                          _build_history()
+                        ],
+                      ),
+                    ),
+                  ],
                 ),
-              ]);
+              ),
+            );
           }
           }
       ),
@@ -338,38 +368,36 @@ Future gethistory() async{
   }
 
   Widget _build_current(order_model order){
-    return Card(
-        color: Colors.grey,
-      child: disabled_button ?
+    return disabled_button ?
     Padding(
-      padding: const EdgeInsets.all(10.0),
-      child: Column(
-        children: [
-          Text('You don\'t have any pending order.\n'
-              'To make an order click the button below.'.tr,
-              style: TextStyle( fontWeight: FontWeight.w400, color: Colors.black87, fontSize: 19)),
-        ElevatedButton(
-          // shape: RoundedRectangleBorder(
-          //   borderRadius: BorderRadius.circular(10)),
-         onPressed: (){
-             Navigator.of(context).push(MaterialPageRoute(
-               builder: (context) => Service_form()));
-             }, child: Text('Make an Order'.tr,style: TextStyle(color:Colors.white, fontSize: 16),),
-        // color: Color(0xff3d437c),
-          )],
-      ),
+    padding: const EdgeInsets.all(10.0),
+    child: Column(
+      children: [
+        Text('You don\'t have any pending order.\n'
+            'To make an order click the button below.'.tr,
+            style: TextStyle( fontWeight: FontWeight.w400, color: Colors.black87, fontSize: 19)),
+      ElevatedButton(
+        // shape: RoundedRectangleBorder(
+        //   borderRadius: BorderRadius.circular(10)),
+       onPressed: (){
+           Navigator.of(context).push(MaterialPageRoute(
+             builder: (context) => Service_form()));
+           }, child: Text('Make an Order'.tr,style: TextStyle(color:Colors.white, fontSize: 16),),
+      // color: Color(0xff3d437c),
+        )],
+    ),
     ) :
-      ExpandablePanel(
-        header: Padding(
+    ExpandablePanel(
+        theme: ExpandableThemeData(iconColor: Colors.blueAccent ),
+      header: Padding(
+        padding: const EdgeInsets.fromLTRB(25, 5, 0, 5),
+        child: Text('Order : ${order.Order_ID}',style: TextStyle(color:Colors.black54, fontSize: 19, fontWeight: FontWeight.w700),),
+      ),
+        collapsed:  Padding(
           padding: const EdgeInsets.fromLTRB(25, 5, 0, 5),
-          child: Text('Order : ${order.Order_ID}',style: TextStyle(color:Color(0xff2F2929), fontSize: 19, fontWeight: FontWeight.w700),),
+          child: Text('Status: ${order.Order_status}',style: TextStyle(color:Colors.black54, fontSize: 19, fontWeight: FontWeight.w700),),
         ),
-          collapsed:  Padding(
-            padding: const EdgeInsets.fromLTRB(25, 5, 0, 5),
-            child: Text('Status: ${order.Order_status}',style: TextStyle(color:Color(0xff2F2929), fontSize: 19, fontWeight: FontWeight.w700),),
-          ),
-          expanded: _Order_details()
-      )
+        expanded: _Order_details()
     );
   }
 
@@ -451,7 +479,7 @@ Future gethistory() async{
           case ConnectionState.waiting:
             return Center(
                 child: CircularProgressIndicator(
-                  color: Colors.black12,
+                  color: Colors.blueAccent,
                 ));
         // case (ConnectionState.done) :
           default:
@@ -459,34 +487,62 @@ Future gethistory() async{
             for(int i = 0; i < snapshot.data.length; i++){
               print('we here');
               cards.add(
-                  Card(
-                    child: snapshot.data[i].Order_ID == null ?
-                    // child: false ?
-                    Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: Column(
-                        children: [
-                          Text('There are no past orders in your history. ',
-                              style: TextStyle(fontWeight: FontWeight.w400,
-                                  color: Colors.black87,
-                                  fontSize: 19)),
-                        ],
-                      ),
-                    ) :
-                    ExpandablePanel(
-                      header: Text('${snapshot.data[i].Order_ID}'),
-                      collapsed: Text('${DateFormat('yyyy-MM-dd - h:mm a').format(snapshot.data[i].Pickupdate)}'),
-                      expanded: Column(
-                        children: [
-                          Text(snapshot.data[i].Order_status),
-                        ],
+                  Padding(
+                    padding: const EdgeInsets.only(left: 5, right: 5),
+                    child: Card(
+                      elevation: 1,
+                      color: Colors.white70,
+                      child: snapshot.data[i].Order_ID == null ?
+                      // child: false ?
+                      Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: Column(
+                          children: [
+                            Text('There are no past orders in your history. ',
+                                style: TextStyle(fontWeight: FontWeight.w400,
+                                    color: Colors.black87,
+                                    fontSize: 19)),
+                          ],
+                        ),
+                      ) :
+                      ExpandablePanel(
+                        theme: ExpandableThemeData(iconColor: Colors.blueAccent ),
+                        header: Padding(
+                          padding: const EdgeInsets.all(10.0),
+                          child: Row(
+                            children: [
+                              Text('Order Id - ',
+                                  style: TextStyle(fontWeight: FontWeight.w400, color: Colors.black54, fontSize: 18)),
+                             Text('${snapshot.data[i].Order_ID}',
+                                  style: TextStyle(fontWeight: FontWeight.w600, color: Colors.blueGrey, fontSize: 18)),
+                            ],
+                          ),
+                        ),
+                        collapsed: Padding(
+                          padding: const EdgeInsets.all(10.0),
+                          child: Row(
+                            children: [
+                              Text('Concluded on - ', style: TextStyle(fontWeight: FontWeight.w600, color: Colors.black54, fontSize: 14), ),
+                              Text('${DateFormat('yyyy-MM-dd - h:mm a').format(snapshot.data[i].Pickupdate)}',
+                                  style: TextStyle(fontWeight: FontWeight.w600, color: Colors.black54, fontSize: 16)),
+                            ],
+                          ),
+                        ),
+                        expanded: Column(
+                          children: [
+                            Text(snapshot.data[i].Order_status),
+                          ],
+                        ),
                       ),
                     ),
                   )
               );
             }
-            return ListView(
-              children: cards,
+            return Container(
+              height: MediaQuery.of(context).size.height * .6,
+              child: ListView(
+                children: cards,
+              ),
             );
         }
       }
@@ -561,7 +617,7 @@ void onQRViewCreated(QRViewController controller){
     this.Qrcode = Qrcode;
   });
   controller.scannedDataStream.listen((Qrcode) async{
-    print(Qrcode!.code);
+    print(Qrcode.code);
         bool checked =
             await DatabaseService(uid: user!.uid).checkdriver(Qrcode!.code);
         print(checked);

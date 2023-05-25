@@ -62,7 +62,7 @@ dependencies:
   flat_icons_flutter: ^1.0.2
   get: ^4.6.5
   flutter_speed_dial: ^6.2.0
-  animated_snack_bar: ^0.3.0
+  animated_snack_bar: ^0.3.1
   lottie: ^1.4.2
 
 
