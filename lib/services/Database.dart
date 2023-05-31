@@ -53,7 +53,7 @@ Stream<QuerySnapshot> get info{
   Future createChat() async{
   await Chats.doc(uid).set({
     'chatID': uid,
-    'chats': ['r hello, dear customer support'],
+    'chats': ['sHello, Welcome to van it customer service, How can we help you?'],
     'date': DateTime.now(),
     'unread': 1,
   });

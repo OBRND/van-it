@@ -28,10 +28,8 @@ class services{
     Position initPositionPoint;
     GeoPoint initPosition;
 
-// if (
-// i == false) {
     initPositionPoint = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high);
+        desiredAccuracy: LocationAccuracy.lowest);
     print("This is your current Position:: " + initPositionPoint.toString());
     String x = initPositionPoint.toString();
 
@@ -41,23 +39,13 @@ class services{
 
     initPosition = initPos;
 
-// String y = initPositionPoint.toString().substring(10,19);
-// String z = initPositionPoint.toString().substring(32,42);
-// print(y);
-// print(z);
-// var long1 = double.parse('$y');
-// var long2 = double.parse('$z');
     services s = services();
     s.ful = initPos.latitude;
     s.gul = initPos.longitude;
-// final String h = "$fu $gu";
+
     print(fu);
     print(gu);
-// print(h);
 
-// i == true;
-// return h;
-// }
   }
 
   Future select(double lattitude, double longgitude) async {
@@ -66,19 +54,12 @@ class services{
     services n = services();
     n.fl = lattitude;
     n.gl = longgitude;
-    // final String k = "$f $g";
     print(f);
     print(g);
-    // print(k);
-    // return k;
-    //   });
   }
   // });}
   Future calculate() async {
     print('$gu,$fu, $g, $f');
-    // double distanceInMeters = Geolocator.distanceBetween(
-    //       services.gu,services.fu,services.g,services.f);
-    // print("$distanceInMeters meters");
     double distanceEnMetres = await distance2point(
         GeoPoint(longitude: services.gu,latitude: services.fu,),
         GeoPoint( longitude: services.g, latitude: services.f ));
@@ -101,29 +82,6 @@ class services{
           roadColor: Colors.orange,
       roadWidth: 15,
         )),
-      // MultiRoadConfiguration(
-      //     startPoint: GeoPoint(
-      //       latitude: p.latitude+0.0005,
-      //       longitude: (p.longitude+0.0005),
-      //     ),
-      //     destinationPoint: GeoPoint(
-      //       latitude: services.fu,
-      //       longitude: services.gu,
-      //     ),
-      //     roadOptionConfiguration: MultiRoadOption(
-      //       roadColor: Colors.orange,
-      //     )
-      // ),
-      // MultiRoadConfiguration(
-      //   startPoint: GeoPoint(
-      //     latitude: p.latitude+0.001,
-      //     longitude: p.longitude+0.001,
-      //   ),
-      //   destinationPoint: GeoPoint(
-      //     latitude: services.fu,
-      //     longitude: services.gu,
-      //   ),
-      // )
     ];
     final listRoadInfo = await controller.drawMultipleRoad(
         configs,
@@ -134,9 +92,6 @@ class services{
     var x = listRoadInfo[0];
     print('what the fuck- $x');
 
-    // print (Config_route[0]);
-    // print (Config_route[1]);
-    // print (Config_route[2]);
     return listRoadInfo[0];
   }
   // drawmultipleroads ();

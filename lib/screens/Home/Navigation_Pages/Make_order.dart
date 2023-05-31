@@ -224,7 +224,7 @@ class _Make_orderState extends State<Make_order> {
                    home: OSMFlutter(
                      controller: mapController,
                      trackMyPosition: true,
-                     initZoom: 14,
+                     initZoom: 11,
                      minZoomLevel: 8,
                      maxZoomLevel: 19,
                      stepZoom: 1.0,
@@ -450,13 +450,18 @@ class _Make_orderState extends State<Make_order> {
             ),
           ),
           SizedBox(height: 10),
-          Text('The package will arive in:'.tr,style: TextStyle(color: Colors.black, fontSize: 18, fontWeight: FontWeight.w300)),
-          Text( time == 'Calculating'.tr ? time : double.parse(time) <= 60 ? ' ${(double.parse(time)/60).toStringAsFixed(0)} seconds \n'
-              : double.parse(time) <= 3600 ? '${(double.parse(time)/60).toStringAsFixed(0) } minutes'
-              : '${(double.parse(time)/60).toStringAsFixed(0)} hours - '
-              '${((double.parse(time)/60).toStringAsFixed(4)).substring(((double.parse(time)/60).toStringAsFixed(4)).length - 4 ,
-              ((double.parse(time)/60).toStringAsFixed(4)).length - 3)} minutes\n',
-              style: (TextStyle(color: Colors.red, fontSize: 18, fontWeight: FontWeight.bold))),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text('Trip Duration: '.tr,style: TextStyle(color: Colors.black, fontSize: 18, fontWeight: FontWeight.w300)),
+              Text( time == 'Calculating'.tr ? time : double.parse(time) <= 60 ? ' ${(double.parse(time)/60).toStringAsFixed(0)} seconds \n'
+                  : double.parse(time) <= 3600 ? '${(double.parse(time)/60).toStringAsFixed(0) } minutes'
+                  : '${(double.parse(time)/60).toStringAsFixed(0)} hours - '
+                  '${((double.parse(time)/60).toStringAsFixed(4)).substring(((double.parse(time)/60).toStringAsFixed(4)).length - 4 ,
+                  ((double.parse(time)/60).toStringAsFixed(4)).length - 3)} minutes\n',
+                  style: (TextStyle(color: Colors.red, fontSize: 18, fontWeight: FontWeight.bold))),],
+          ),
+
         ],
       ),
     ));

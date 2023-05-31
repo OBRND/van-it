@@ -37,35 +37,27 @@ class _HomeState extends State<Home> {
   // late Object data = {"                  "};
   @override
   Widget build(BuildContext context) {
-  //   final user = Provider.of<UserFB?>(context);
-  // // Auth_service auth_service =Auth_service();
-  // final uid = user!.uid;
-  // DatabaseService databaseservice = DatabaseService(uid: user.uid);
-
-    // Future getloc() async{
-    //   var dara = await databaseservice.getlocation();
-    //   print(dara);
-    //   setState((){
-    //     data = dara;
-    //   });
-      // return dara.longitude;
-    // }
-  // Future setloc() async{
-  //     await databaseservice.update_location();
-  // }
-    // getloc();
     return Scaffold(
       extendBodyBehindAppBar: true,
       extendBody: false,
       appBar: AppBar(
+        iconTheme: IconThemeData(color: Color(0xFF090943), size: 28),
         backgroundColor: Colors.transparent,
         elevation: 0,
-        title: Text('Welcome Home'.tr),
+        title: Row(
+          children: [
+            Text('V'.tr,
+            style: TextStyle(color: Color(0xFF090943), fontSize: 27,),),
+            Text('an it'.tr,
+            style: TextStyle(color: Color(0xFF090943), fontSize: 22),),
+            Image.asset("Assets/fast-delivery-modified.png",height: 40,width: 40, color: Color(0xFF090943),),
+          ],
+        ),
         actions: [
           IconButton(onPressed: (){
             Navigator.of(context).push(MaterialPageRoute(
                 builder: (context) => Notifications_page()));
-          }, icon: Icon(Icons.notifications_active))
+          }, icon: Icon(Icons.notifications_active, size: 28,))
         ],
        ),
       drawer: const PhysicalModel(child: NavigationDrawerModel(),
@@ -79,20 +71,23 @@ class _HomeState extends State<Home> {
             decoration: const BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topCenter,
-          colors:[ Color(0xFF3588B6),
+          colors:[ Color(0xFF2190EF),
             Color(0xFFE1E2E7)])
           ),
           child: Column(
-            mainAxisSize: MainAxisSize.min,
+            mainAxisSize: MainAxisSize.max,
             children  : [
-          Padding(
-          padding: const EdgeInsets.only(top: 100),
-          child: Container(
-            height: 200,
-            child: Lottie.network(
-              'https://assets2.lottiefiles.com/packages/lf20_kx6a1byu.json',
-            ),),),
-              _buildcard(cardtype: 'card 1', color: Color(0xFF090943),cardnumber: '${DateTime.now().microsecondsSinceEpoch}', accountholder: 'John Doe', cardexpiration: '01\01\2023'),
+          Container(
+            height: MediaQuery.of(context).size.height * .4,
+            child: Padding(
+              padding: EdgeInsets.only(top: MediaQuery.of(context).size.height * .1 ),
+              child: Lottie.network(
+                'https://assets2.lottiefiles.com/packages/lf20_kx6a1byu.json',
+              ),
+            ),),
+              Container(
+                  height: MediaQuery.of(context).size.height * .6,
+                  child: _buildcard(cardtype: 'card 1', color: Color(0xFF090943),cardnumber: '${DateTime.now().microsecondsSinceEpoch}', accountholder: 'John Doe', cardexpiration: '01\01\2023')),
             ],
           ),
                     ),
@@ -103,10 +98,10 @@ class _HomeState extends State<Home> {
   Widget _buildcard({required String cardtype,required Color color, required String cardnumber,required String accountholder,required String cardexpiration}){
     return Card(
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(10.0),
-        side: BorderSide(color: Colors.black),),
-      // elevation: 0,
-      color: Colors.white70.withOpacity(.5),
+        borderRadius: BorderRadius.circular(20.0),
+        side: BorderSide(color: Colors.blueAccent),),
+      elevation: 0,
+      color: Color(0xffd5eef6).withOpacity(.2),
       child: Column(
         children: [
           Stack(
@@ -115,26 +110,21 @@ class _HomeState extends State<Home> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   // SizedBox(height: MediaQuery.of(context).size.height*.15),
-                  InkWell(
-                    onTap: (){
-                      Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => Buy_card()));
-                    },
-                    child: Card(
-                      elevation: 0,
-                      color: Colors.transparent,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(15.0),
-                        ) ,
-                        child: Padding(
-                          padding: const EdgeInsets.all(20.0),
-                          child: Text( 'We have got great offers for you.'.tr,
-                            style: TextStyle(color: Colors.black,fontSize: 19, fontWeight: FontWeight.w800,
-                            ),
+                  Card(
+                    elevation: 0,
+                    color: Colors.transparent,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15.0),
+                      ) ,
+                      child: Padding(
+                        padding: const EdgeInsets.all(20.0),
+                        child: Text( '\u{1F381} Great offers for you!'.tr,
+                          style: TextStyle(color: Colors.black54,fontSize: 22, fontWeight: FontWeight.w600,
                           ),
-                        )
-                    ),
+                        ),
+                      )
                   ),
+
                   Row(
                     children: [
                       Container(
@@ -143,10 +133,13 @@ class _HomeState extends State<Home> {
                           padding: const EdgeInsets.all(20.0),
                           child: Wrap(
                             children: [
-                              Text('15 %', style: TextStyle(color: Colors.black54, fontSize: 35, fontWeight: FontWeight.w600),),
-                              Text(
-                              'off on home moving', style: TextStyle(color: Colors.black54, fontSize: 20, fontWeight: FontWeight.w600),
-                            ),]
+                              Text('Buy Van cards', style: TextStyle(color: Colors.black54, fontSize: 22, fontWeight: FontWeight.w600),),
+                              Padding(
+                                padding: const EdgeInsets.all(5.0),
+                                child: Text(
+                                'to get big discounts off your orders', style: TextStyle(color: Colors.black54, fontSize: 16, fontWeight: FontWeight.w400),
+                            ),
+                              ),]
                           ),
                         ),
                       ),
@@ -164,7 +157,7 @@ class _HomeState extends State<Home> {
                           child: Container(
                             alignment: Alignment.center,
                             height: 150,
-                            width: MediaQuery.of(context).size.width * .55,
+                            width: MediaQuery.of(context).size.width * .56,
                             padding: const EdgeInsets.only(left: 15,right: 15,bottom: 25),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -199,8 +192,8 @@ class _HomeState extends State<Home> {
                 ],
               ),
               Positioned(
-                top: MediaQuery.of(context).size.height*.077,
-                left: MediaQuery.of(context).size.width*.79,
+                top: MediaQuery.of(context).size.height*.085,
+                left: MediaQuery.of(context).size.width*.78,
                 child: RotationTransition(
                   turns: AlwaysStoppedAnimation(-20 / 360),
                   child: Card(
@@ -222,18 +215,39 @@ class _HomeState extends State<Home> {
               ),
             ],
           ),
-          StaggeredGrid.count(
-            crossAxisCount: 2,
-            mainAxisSpacing: 2,
-            crossAxisSpacing: 2,
-            children: [
-              StaggeredGridTile.count(
-                crossAxisCellCount: 1,
-                mainAxisCellCount: 1,
-                child: Hero(
-                  tag: 'home',
-                  child: Padding(
-                    padding: const EdgeInsets.all(10.0),
+
+          Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: StaggeredGrid.count(
+              crossAxisCount: 3,
+              mainAxisSpacing: 2,
+              crossAxisSpacing: 2,
+              children: [
+                StaggeredGridTile.count(
+                  crossAxisCellCount: 1,
+                  mainAxisCellCount: 1,
+                  child: Container(
+                    width: MediaQuery.of(context).size.width * .37,
+                    child: Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Wrap(
+                          children: [
+                            Text('15% off', style: TextStyle(color: Colors.black54, fontSize: 22, fontWeight: FontWeight.w600),),
+                            Padding(
+                              padding: const EdgeInsets.all(5.0),
+                              child: Text(
+                                'on all orders', style: TextStyle(color: Colors.black54, fontSize: 16, fontWeight: FontWeight.w400),
+                              ),
+                            ),]
+                      ),
+                    ),
+                  ),
+                ),
+                StaggeredGridTile.count(
+                  crossAxisCellCount: 1,
+                  mainAxisCellCount: 1,
+                  child: Hero(
+                    tag: 'home',
                     child: ElevatedButton(
                       style: ButtonStyle(
                         shape: MaterialStateProperty.all<RoundedRectangleBorder>(
@@ -250,124 +264,72 @@ class _HomeState extends State<Home> {
                           MaterialPageRoute(builder: (context) => Home_details()),
                         );
                       },
-                      child: Padding(
-                        padding: const EdgeInsets.all(15.0),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(Icons.home_rounded, size: 80, color: Colors.white),
-                            Text(
-                              'Home'.tr,
-                              style: TextStyle(
-                                fontSize:18,
-                                color: Colors.white,
-                                fontWeight: FontWeight.w400,
-                              ),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(Icons.home_rounded, size: 60, color: Colors.white),
+                          Text(
+                            'Home'.tr,
+                            style: TextStyle(
+                              fontSize:15,
+                              color: Colors.white,
+                              fontWeight: FontWeight.w400,
                             ),
-                            Text(
-                              'Moving'.tr,
-                              style: TextStyle(
-                                fontSize:18,
-                                color: Colors.white,
-                                fontWeight: FontWeight.w400,
-                              ),
+                          ),
+                          Text(
+                            'Moving'.tr,
+                            style: TextStyle(
+                              fontSize:15,
+                              color: Colors.white,
+                              fontWeight: FontWeight.w400,
                             ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
                     ),
                   ),
                 ),
-              ),
-              StaggeredGridTile.count(
-                crossAxisCellCount: 1,
-                mainAxisCellCount: 1,
-                child: Hero(
-                  tag: 'furniture'.tr,
-                  child: Padding(
-                    padding: const EdgeInsets.all(10.0),
+                StaggeredGridTile.count(
+                  crossAxisCellCount: 1,
+                  mainAxisCellCount: 1,
+                  child: Hero(
+                    tag: 'furniture'.tr,
                     child: ElevatedButton(
                         style: ButtonStyle(
                             shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                                 RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(50.0),
-                                  side: BorderSide(color: Colors.white54),)),
+                                  side: BorderSide(color: Colors.white70),)),
                             backgroundColor: MaterialStateColor.resolveWith((states) => Colors.blueAccent)),
                         onPressed: (){
                           Navigator.of(context).push(MaterialPageRoute(
                               builder: (context) => Furniture_details()));
                         },
-                        child: Padding(
-                          padding: const EdgeInsets.all(15.0),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Icon(Icons.chair_outlined, size: 80, color: Colors.white),
-                              Text('Furniture'.tr,  style: TextStyle(fontSize: 18, color: Colors.white, fontWeight: FontWeight.w400)),
-                              Text('Moving'.tr,  style: TextStyle(fontSize: 18, color: Colors.white, fontWeight: FontWeight.w400)),
-                            ],
-                          ),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(Icons.chair_outlined, size: 60, color: Colors.white),
+                            Text('Furniture'.tr,  style: TextStyle(fontSize: 15, color: Colors.white, fontWeight: FontWeight.w400)),
+                            Text('Moving'.tr,  style: TextStyle(fontSize: 15, color: Colors.white, fontWeight: FontWeight.w400)),
+                          ],
                         )),
                   ),
                 ),
-              ),
-              TextButton(onPressed: (){
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => Service_form()));
-              },
-                  child: Row(
-                    children: [
-                      Icon(Icons.forward,color: Colors.black54,),
-                      Text('View more', style: TextStyle(color: Colors.black54),),
-                    ],
-                  ))
-              // StaggeredGridTile.count(
-              //   crossAxisCellCount: 1,
-              //   mainAxisCellCount: 1,
-              //   child: Hero(
-              //     tag: 'company'.tr,
-              //     child: Padding(
-              //       padding: const EdgeInsets.all(10.0),
-              //       child: ElevatedButton(onPressed: (){
-              //         Navigator.of(context).push(MaterialPageRoute(
-              //             builder: (context) => Company_details()));
-              //       },
-              //           style: ButtonStyle(
-              //               shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-              //                   RoundedRectangleBorder(
-              //                     borderRadius: BorderRadius.circular(35.0),
-              //                     side: BorderSide(color: Colors.white54),)),
-              //               backgroundColor: MaterialStateColor.resolveWith((states) => Colors.blueAccent)),
-              //           child: Text('Company Move'.tr,  style: TextStyle(fontSize: 20, color: Colors.black))),
-              //     ),
-              //   ),
-              // ),
-              // StaggeredGridTile.count(
-              //   crossAxisCellCount: 1,
-              //   mainAxisCellCount: 1,
-              //   child: Hero(
-              //     tag: 'special',
-              //     child: Padding(
-              //       padding: const EdgeInsets.all(10.0),
-              //       child: ElevatedButton(
-              //           style: ButtonStyle(
-              //               shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-              //                   RoundedRectangleBorder(
-              //                     borderRadius: BorderRadius.circular(35.0),
-              //                     side: BorderSide(color: Colors.white54),)),
-              //               backgroundColor: MaterialStateColor.resolveWith((states) => Colors.blueAccent)),
-              //           onPressed: (){
-              //             Navigator.of(context).push(MaterialPageRoute(
-              //                 builder: (context) => Special_details()));
-              //           },
-              //           child: Text('Special Move'.tr,  style: TextStyle(fontSize: 20, color: Colors.black))),
-              //     ),
-              //   ),
-              // ),
-
-
-            ],
+              ],
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.only(top: 5, left: MediaQuery.of(context).size.width * .42),
+            child: TextButton(onPressed: (){
+              Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => Service_form()));
+            },
+                child: Row(
+                  children: [
+                    Text('Explore our other services', style: TextStyle(color: Colors.blue),),
+                    Icon(Icons.arrow_forward_ios,color: Colors.blueAccent, size: 30,),
+                  ],
+                )),
           ),
         ],
       ),
