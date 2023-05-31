@@ -25,43 +25,38 @@ This app offers a range of unparalleled home and other moving services, ensuring
 - Firebase 
 
 ## Features
-The most relevant features are:
-- Ordering by Location with the help of GPS
-- An independent wallet system specially designed for the system
-- Live tracking
-- Live chat with customer suppport 
-- Localization to 3 Ethiopian languages
+Van-It offers an array of exceptional features, ensuring a seamless moving experience:
+- Effortless Ordering: Our app utilizes GPS technology, allowing you to easily place orders based on your location.
+- Dedicated Wallet System: Experience the convenience of our specially designed independent wallet system, simplifying payment transactions within the app.
+- Real-time Tracking: Stay informed and in control with our live tracking feature, enabling you to monitor the progress of your moving service in real-time.
+- Instant Customer Support: Engage in a live chat with our friendly customer support team, who are ready to assist you promptly with any inquiries or concerns you may have.
+- Localization for Ethiopian Languages: We take pride in our commitment to inclusivity, offering localization support for three prominent Ethiopian languages, ensuring a seamless experience for users across the country.
 
-## Screenshots
 ## Screenshots
 
 | Home Page              | Orders Page            | Wallet Page            |
 | ---------------------- | ---------------------- | ---------------------- | 
 | ![Home](Screenshots/Home.jpg) | ![Order](Screenshots/Orders.jpg) | ![Wallet](Screenshots/wallet.jpg) |
 
-| Detail form Page       | Payment options Page   | Set address Page       |   Support Page           |
+| Detail form Page       | Payment options Page   | Set address Page       | Support Page           |
 | ---------------------- | ---------------------- | ---------------------- | ---------------------- | 
-| ![Details](Screenshots/Details.jpg) | ![Payment](Screenshots/payment.jpg) | ![Set Address](Screenshots/SetAddress.jpg) |  ![Support](Screenshots/Support.jpg)
+| ![Details](Screenshots/Details.jpg) | ![Payment](Screenshots/payment.jpg) | ![Set Address](Screenshots/SetAddress.jpg) | ![Support](Screenshots/Support.jpg)
 
 ## Demo
-
-<video width="640" height="360" controls autoplay muted>
-  <source src="Screenshots/VanitRecord.mp4" type="video/mp4">
-  Your browser does not support the video tag.
-</video>
-
+A quick walkthrough of how you make an order in the app. <br><br>
+<img src="Screenshots/Vanit_Recording.gif?raw=true" alt="Demo" height="600">
 
 ## Project Status
- This project is currenlt on hold but anyone interested please contact me
-
+ There is no active development currently on this project but if anyone is interested to contribute or have any questions about the project, dont't hesitate to contact me.</br>
 
 ## Acknowledgements
-Give credit here.
-- This project wouldn't have been possible if not for the awesome OSM flutter package that is available on (https://github.com/liodali/osm_flutter).
-- A Special thanks to Mohamed ali Hamza for the package. check him out at https://github.com/liodali. 
-- Many thanks to everyone that helped me in any way on the development of this project.
+- This project owes its success to the remarkable OSM Flutter package, available at (https://github.com/liodali/osm_flutter), which played a pivotal role in its implementation.
+ A heartfelt appreciation goes to Mohamed Ali Hamza for his exceptional contribution in developing this invaluable package. Be sure to explore his work at (https://github.com/liodali).
+- I am immensely grateful to the individuals who extended their support and assistance throughout the development of this project. Your contributions were instrumental in making this venture a reality, and I    extend my sincerest thanks to each and every one of you.
 
 ## Contact
-Created by [@OBRND](https://github.com/OBRND) - feel free to contact me!
-
-To anyone interested in this project, contact me at obsannew@gmail.com
+Created by [@OBRND](https://github.com/OBRND) - feel free to contact me!</br></br>
+<a href="mailto:obsannew@gmail.com">
+    <img src="https://img.shields.io/badge/-obsannew@gmail.com-c14438?style=flat-square&logo=Gmail&logoColor=white" alt="Gmail Badge">
+  </a>
+  
