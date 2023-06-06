@@ -47,7 +47,7 @@ A quick walkthrough of how you make an order in the app. <br><br>
 <img src="Screenshots/Vanit_Recording.gif?raw=true" alt="Demo" height="600">
 
 ## Project Status
- There is no active development currently on this project but if anyone is interested to contribute or have any questions about the project, dont't hesitate to contact me.</br>
+ There is no active development currently on this project but if anyone is interested to contribute or have any questions about the project, don't hesitate to contact me.</br>
 
 ## Acknowledgements
 - This project owes its success to the remarkable OSM Flutter package, available at (https://github.com/liodali/osm_flutter), which played a pivotal role in its implementation.
